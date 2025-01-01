@@ -5,6 +5,14 @@ public class Player : MonoBehaviour
 {
     private Vector2 _direction = Vector2.right;
     [SerializeField] private float _speed;
+    [SerializeField] private GameGrid _gameGrid;
+    
+    //Use object pooling for the snake sections
+
+    private void Start()
+    {
+        transform.position = _gameGrid.GetClosestTile(transform.position);
+    }
 
     private void Update()
     {

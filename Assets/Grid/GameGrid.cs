@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class GameGrid : MonoBehaviour
@@ -7,21 +8,29 @@ public class GameGrid : MonoBehaviour
     
     //Do not save in a data structure, calculate each time.
 
-    private Vector2 GetNearbyPosition(Vector2 positionInGrid, Vector2 direction)
+    private Vector2 GetNextTileInDirection(Vector2 positionInGrid, EDirection direction)
     {
-        direction.Normalize(); 
-        Vector2 newPositionInGrid = positionInGrid + direction * _tileSize;
+        Vector2 newPositionInGrid = positionInGrid + direction.GetDirectionVector() * _tileSize;
         return newPositionInGrid;
     }
 
-    private void GetRandomTile()
+    private Vector2 GetRandomTile()
     {
         Vector2 randomPositionInGrid = new(Random.Range(_collider.bounds.min.x, _collider.bounds.max.x),
             Random.Range(_collider.bounds.min.y, _collider.bounds.max.y));
+        return GetClosestTile(randomPositionInGrid);
     }
 
-    private Vector2 GetClosestTile(Vector2 nearbyPosition)
+    [Button]
+    public Vector2 GetClosestTile(Vector2 positionInGrid)
     {
-        return Vector2.zero;
+        //TODO: make this work with a position outside of the grid
+        Vector2 gridStartTile = _collider.bounds.min;
+        
+        float tileRowIndex = Mathf.Round((positionInGrid.x - gridStartTile.x) / _tileSize);
+        float tileColumnIndex = Mathf.Round((positionInGrid.y - gridStartTile.y) / _tileSize);
+
+        Vector2 closestTile = new(gridStartTile.x + tileRowIndex * _tileSize, gridStartTile.y + tileColumnIndex * _tileSize);
+        return closestTile;
     }
 }

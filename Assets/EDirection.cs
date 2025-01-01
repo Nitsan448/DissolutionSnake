@@ -28,14 +28,4 @@ public static class EDirectionExtensions
 
         return Vector2.zero;
     }
-
-    public static EDirection GetNextDirection(this EDirection direction)
-    {
-        if (direction == EDirection.Up)
-        {
-            return EDirection.Right;
-        }
-
-        return direction + 1;
-    }
 }
