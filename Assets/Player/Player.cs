@@ -6,13 +6,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [ShowInInspector] [ReadOnly] private EDirection _startingMovementDirection = EDirection.Up;
+    [SerializeField] private EDirection _startingMovementDirection = EDirection.Up;
     [SerializeField] private float _timeBetweenMovements;
     [SerializeField] private GameGrid _gameGrid;
     private CancellationTokenSource _moveCts;
     private PlayerInputHandler _playerInputHandler;
 
-    //Use object pooling for the snake sections
+    //TODO: Use object pooling for the snake sections
 
     private void Awake()
     {
