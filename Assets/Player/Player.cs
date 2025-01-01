@@ -6,13 +6,18 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [ShowInInspector] [ReadOnly] private EDirection _direction = EDirection.Up;
+    [ShowInInspector] [ReadOnly] private EDirection _startingMovementDirection = EDirection.Up;
     [SerializeField] private float _timeBetweenMovements;
     [SerializeField] private GameGrid _gameGrid;
-    private bool _acceptMovementInput = true;
     private CancellationTokenSource _moveCts;
+    private PlayerInputHandler _playerInputHandler;
 
     //Use object pooling for the snake sections
+
+    private void Awake()
+    {
+        _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
+    }
 
     private void Start()
     {
@@ -28,43 +33,19 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (_acceptMovementInput)
-        {
-            HandleMovementInput();
-        }
+        _playerInputHandler.HandleInput();
     }
 
-    private void HandleMovementInput()
-    {
-        //TODO: buffer input
-        EDirection previousDirection = _direction;
-        if (Input.GetKeyDown(KeyCode.D) && _direction != EDirection.Left)
-        {
-            _direction = EDirection.Right;
-        }
-        else if (Input.GetKeyDown(KeyCode.A) && _direction != EDirection.Right)
-        {
-            _direction = EDirection.Left;
-        }
-        else if (Input.GetKeyDown(KeyCode.W) && _direction != EDirection.Down)
-        {
-            _direction = EDirection.Up;
-        }
-        else if (Input.GetKeyDown(KeyCode.S) && _direction != EDirection.Up)
-        {
-            _direction = EDirection.Down;
-        }
-
-        if (_direction != previousDirection) _acceptMovementInput = false;
-    }
 
     private async UniTask Move()
     {
         //TODO: While game is running
         while (true)
         {
-            GetComponent<Rigidbody2D>().MovePosition(_gameGrid.GetNextTileInDirection(transform.position, _direction));
-            _acceptMovementInput = true;
+            GetComponent<Rigidbody2D>()
+                .MovePosition(_gameGrid.GetNextTileInDirection(transform.position, _playerInputHandler.MovementDirection));
+
+            _playerInputHandler.AcceptMovementInput = true;
             await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenMovements), delayTiming: PlayerLoopTiming.FixedUpdate,
                 cancellationToken: _moveCts.Token);
         }

@@ -22,8 +22,7 @@ public class GameGrid : MonoBehaviour
             Random.Range(_collider.bounds.min.y, _collider.bounds.max.y));
         return GetClosestTile(randomPositionInGrid);
     }
-
-    [Button]
+    
     public Vector2 GetClosestTile(Vector2 positionInGrid)
     {
         //TODO: make this work with a position outside of the grid
