@@ -1379,7 +1379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4861beddee4f2b349b5c36b08cb89d39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeBetweenMovements: 0.2
+  _timeBetweenMovements: 0.15
   _gameGrid: {fileID: 238635885}
 --- !u!50 &1441227972
 Rigidbody2D:
