@@ -4,10 +4,10 @@ using UnityEngine;
 
 public enum EDirection
 {
+    Up,
     Right,
     Down,
     Left,
-    Up,
 }
 
 public static class EDirectionExtensions
@@ -27,5 +27,25 @@ public static class EDirectionExtensions
         }
 
         return Vector2.zero;
+    }
+
+    public static EDirection RotateClockwise(this EDirection direction)
+    {
+        if (direction == EDirection.Left)
+        {
+            return EDirection.Up;
+        }
+        
+        return direction + 1;
+    }
+    
+    public static EDirection RotateCounterClockwise(this EDirection direction)
+    {
+        if (direction == EDirection.Up)
+        {
+            return EDirection.Left;
+        }
+
+        return direction - 1;
     }
 }

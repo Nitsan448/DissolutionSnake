@@ -1251,6 +1251,7 @@ GameObject:
   - component: {fileID: 1441227969}
   - component: {fileID: 1441227970}
   - component: {fileID: 1441227971}
+  - component: {fileID: 1441227972}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1267,7 +1268,7 @@ Transform:
   m_GameObject: {fileID: 1441227967}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1365,7 +1366,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.35
+  m_Radius: 0.4
 --- !u!114 &1441227971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,8 +1379,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4861beddee4f2b349b5c36b08cb89d39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 10
+  _timeBetweenMovements: 0.2
   _gameGrid: {fileID: 238635885}
+--- !u!50 &1441227972
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441227967}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 1
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!1 &1479356030
 GameObject:
   m_ObjectHideFlags: 0
