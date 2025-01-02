@@ -12,7 +12,7 @@ public class PlayerInputHandler
 
     public void HandleInput()
     {
-        //TODO: buffer input
+        //TODO: Move as soon as input is received, don't use accept movement input boolean
 
         if (!AcceptMovementInput) return;
 

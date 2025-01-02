@@ -11,18 +11,20 @@ public class Player : MonoBehaviour
     [SerializeField] private float _timeBetweenMovements;
     [SerializeField] private LayerMask _obstaclesLayerMask;
     [SerializeField] private GameGrid _gameGrid;
+    [SerializeField] private SnakeNode _snakeNodePrefab;
+    private Rigidbody2D _rigidbody;
     private CancellationTokenSource _moveCts;
     private PlayerInputHandler _playerInputHandler;
 
     private LinkedList<SnakeNode> _snake;
 
-    [SerializeField] private SnakeNode _snakeNodePrefab;
 
     //TODO: Use linked list for snake segments
     //TODO: Use object pooling for the snake sections
 
     private void Awake()
     {
+        _rigidbody = GetComponent<Rigidbody2D>();
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
     }
 
@@ -31,19 +33,24 @@ public class Player : MonoBehaviour
         CreateSnake(3);
         transform.position = _gameGrid.GetClosestTile(transform.position);
         _moveCts = new CancellationTokenSource();
-        // Move().Forget();
+        Move().Forget();
     }
 
     private void CreateSnake(int numberOfSegments)
     {
         _snake = new LinkedList<SnakeNode>();
-        _snake.AddFirst(Instantiate(_snakeNodePrefab, transform.position, Quaternion.identity));
+        _snake.AddFirst(CreateSnakeSegment(transform.position));
         _snake.First.Value.MakeHead();
 
         for (int i = 1; i < numberOfSegments; i++)
         {
-            _snake.AddLast(Instantiate(_snakeNodePrefab, transform.position + (new Vector3(0, -1, 0) * i), Quaternion.identity));
+            _snake.AddLast(CreateSnakeSegment(transform.position + (Vector3.down * i)));
         }
+    }
+
+    private SnakeNode CreateSnakeSegment(Vector2 segmentPosition)
+    {
+        return Instantiate(_snakeNodePrefab, segmentPosition, Quaternion.identity, parent: transform);
     }
 
     private void AddFront()
@@ -67,13 +74,18 @@ public class Player : MonoBehaviour
 
     private async UniTask Move()
     {
-        //Each iteration 
-
         //TODO: While game is running
         while (true)
         {
-            GetComponent<Rigidbody2D>()
-                .MovePosition(_gameGrid.GetNextTileInDirection(transform.position, _playerInputHandler.MovementDirection));
+            //TODO: instead of simply moving, create a new head and remove the tail.
+            //TODO: Custom collision detection is likely needed.
+            _snake.AddFirst(CreateSnakeSegment(_gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
+                _playerInputHandler.MovementDirection)));
+            SnakeNode last = _snake.Last.Value;
+            _snake.RemoveLast();
+            Destroy(last.gameObject);
+
+            // _rigidbody.MovePosition(_gameGrid.GetNextTileInDirection(transform.position, _playerInputHandler.MovementDirection));
 
             _playerInputHandler.AcceptMovementInput = true;
             await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenMovements), delayTiming: PlayerLoopTiming.FixedUpdate,
