@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask _obstaclesLayerMask;
     [SerializeField] private GameGrid _gameGrid;
     [SerializeField] private SnakeNode _snakeNodePrefab;
+    [SerializeField] private int _snakeStartingSize;
     private Rigidbody2D _rigidbody;
     private CancellationTokenSource _moveCts;
     private PlayerInputHandler _playerInputHandler;
@@ -30,8 +32,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        CreateSnake(3);
         transform.position = _gameGrid.GetClosestTile(transform.position);
+        CreateSnake(_snakeStartingSize);
         _moveCts = new CancellationTokenSource();
         Move().Forget();
     }
@@ -79,13 +81,17 @@ public class Player : MonoBehaviour
         {
             //TODO: instead of simply moving, create a new head and remove the tail.
             //TODO: Custom collision detection is likely needed.
+
+            Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
+                _playerInputHandler.MovementDirection);
+            HandleCollisionsInNextTile(nextTilePosition);
+            _snake.First.Value.MakeBody();
             _snake.AddFirst(CreateSnakeSegment(_gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
                 _playerInputHandler.MovementDirection)));
+            _snake.First.Value.MakeHead();
             SnakeNode last = _snake.Last.Value;
             _snake.RemoveLast();
             Destroy(last.gameObject);
-
-            // _rigidbody.MovePosition(_gameGrid.GetNextTileInDirection(transform.position, _playerInputHandler.MovementDirection));
 
             _playerInputHandler.AcceptMovementInput = true;
             await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenMovements), delayTiming: PlayerLoopTiming.FixedUpdate,
@@ -93,15 +99,30 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+
+    private void HandleCollisionsInNextTile(Vector2 nextTilePosition)
     {
-        if (((1 << other.gameObject.layer) & _obstaclesLayerMask) != 0)
+        //Problem with overlap point
+        Collider2D hit = Physics2D.OverlapBox(nextTilePosition, _gameGrid.TileSize * Vector2.one, 0);
+        if (!hit) return;
+        Debug.Log(hit.gameObject.name);
+        if (((1 << hit.gameObject.layer) & _obstaclesLayerMask) != 0)
         {
-            transform.position = new Vector3(0, -6, 0);
+            HitObstacle();
         }
-        else if (other.gameObject.TryGetComponent(out Item item))
+        else if (hit.gameObject.TryGetComponent(out Item item))
         {
-            Destroy(other.gameObject);
+            HitItem(hit.gameObject);
         }
+    }
+
+    public void HitObstacle()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void HitItem(GameObject item)
+    {
+        Destroy(item);
     }
 }
