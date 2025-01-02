@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8296892466763855067}
   - component: {fileID: 647213429820773182}
   - component: {fileID: 2671592054587622877}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Segment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,4 +150,3 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 8296892466763855067}
   _headSprite: {fileID: -4913734232120889749, guid: 0c7829fa32b94c34fbac096f8f56396b, type: 3}
   _segmentSprite: {fileID: 1132601440937267150, guid: 0c7829fa32b94c34fbac096f8f56396b, type: 3}
-  _collider: {fileID: 647213429820773182}

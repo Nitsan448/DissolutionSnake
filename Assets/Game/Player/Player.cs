@@ -55,14 +55,6 @@ public class Player : MonoBehaviour
         return Instantiate(_snakeNodePrefab, segmentPosition, Quaternion.identity, parent: transform);
     }
 
-    private void AddFront()
-    {
-    }
-
-    private void AddBack()
-    {
-    }
-
     private void OnDestroy()
     {
         _moveCts.Cancel();
@@ -80,7 +72,7 @@ public class Player : MonoBehaviour
         while (true)
         {
             //TODO: instead of simply moving, create a new head and remove the tail.
-            //TODO: Custom collision detection is likely needed.
+            //TODO: refactor
 
             Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
                 _playerInputHandler.MovementDirection);
@@ -103,7 +95,7 @@ public class Player : MonoBehaviour
     private void HandleCollisionsInNextTile(Vector2 nextTilePosition)
     {
         //Problem with overlap point
-        Collider2D hit = Physics2D.OverlapBox(nextTilePosition, _gameGrid.TileSize * Vector2.one, 0);
+        Collider2D hit = Physics2D.OverlapBox(nextTilePosition, _gameGrid.TileSize * Vector2.one / 2, 0);
         if (!hit) return;
         Debug.Log(hit.gameObject.name);
         if (((1 << hit.gameObject.layer) & _obstaclesLayerMask) != 0)
@@ -124,5 +116,23 @@ public class Player : MonoBehaviour
     public void HitItem(GameObject item)
     {
         Destroy(item);
+        // AddBack();
     }
+
+    // private void AddBack()
+    // {
+    //     SnakeNode lastSegment = _snake.Last.Value;
+    //     SnakeNode secondToLastSegment = _snake.Last.Previous.Value;
+    //
+    //
+    //     EDirection direction = secondToLastSegment == null
+    //         ? EDirection.Down
+    //         : (lastSegment.transform.position - secondToLastSegment.transform.position).normalized;
+    //     
+    //     Vector2 newSegmentPosition = _gameGrid.GetNextTileInDirection( (Vector2)lastSegment.transform.position, direction);
+    //
+    //     // Create and add the new segment
+    //     SnakeNode newSegment = CreateSnakeSegment(newSegmentPosition);
+    //     _snake.AddLast(newSegment);
+    // }
 }
