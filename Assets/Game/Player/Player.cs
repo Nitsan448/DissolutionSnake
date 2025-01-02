@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
@@ -13,6 +14,11 @@ public class Player : MonoBehaviour
     private CancellationTokenSource _moveCts;
     private PlayerInputHandler _playerInputHandler;
 
+    private LinkedList<SnakeNode> _snake;
+
+    [SerializeField] private SnakeNode _snakeNodePrefab;
+
+    //TODO: Use linked list for snake segments
     //TODO: Use object pooling for the snake sections
 
     private void Awake()
@@ -22,9 +28,30 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        CreateSnake(3);
         transform.position = _gameGrid.GetClosestTile(transform.position);
         _moveCts = new CancellationTokenSource();
-        Move().Forget();
+        // Move().Forget();
+    }
+
+    private void CreateSnake(int numberOfSegments)
+    {
+        _snake = new LinkedList<SnakeNode>();
+        _snake.AddFirst(Instantiate(_snakeNodePrefab, transform.position, Quaternion.identity));
+        _snake.First.Value.MakeHead();
+
+        for (int i = 1; i < numberOfSegments; i++)
+        {
+            _snake.AddLast(Instantiate(_snakeNodePrefab, transform.position + (new Vector3(0, -1, 0) * i), Quaternion.identity));
+        }
+    }
+
+    private void AddFront()
+    {
+    }
+
+    private void AddBack()
+    {
     }
 
     private void OnDestroy()
@@ -40,6 +67,8 @@ public class Player : MonoBehaviour
 
     private async UniTask Move()
     {
+        //Each iteration 
+
         //TODO: While game is running
         while (true)
         {
@@ -57,6 +86,10 @@ public class Player : MonoBehaviour
         if (((1 << other.gameObject.layer) & _obstaclesLayerMask) != 0)
         {
             transform.position = new Vector3(0, -6, 0);
+        }
+        else if (other.gameObject.TryGetComponent(out Item item))
+        {
+            Destroy(other.gameObject);
         }
     }
 }
