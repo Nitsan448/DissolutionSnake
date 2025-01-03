@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class ItemSpawner : MonoBehaviour
     private CancellationTokenSource _spawnItemsCts;
 
     //Use object pooling for items?
+    private List<Item> _items = new(2);
 
     public void Init(GameGrid gameGrid)
     {
@@ -35,7 +37,7 @@ public class ItemSpawner : MonoBehaviour
             while (true)
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenSpawns), cancellationToken: _spawnItemsCts.Token);
-                SpawnItem();
+                if (_items.Count < 2) SpawnItem();
             }
         }
     }
@@ -44,6 +46,7 @@ public class ItemSpawner : MonoBehaviour
     {
         Vector2 itemPosition = _gameGrid.GetRandomUnoccupiedTile();
         Item item = Instantiate(_itemPrefab, itemPosition, Quaternion.identity, transform);
+        _items.Add(item);
         _gameGrid.MarkTileAsOccupied(itemPosition, item.gameObject);
     }
 }

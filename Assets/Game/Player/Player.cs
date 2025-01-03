@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_gameManager.GameState != EGameState.Running) return;
         bool isTimeForNextMovement = _lastMovementTime + _timeBetweenMovements < Time.time;
         if (isTimeForNextMovement || _playerInputHandler.DirectionChanged)
         {
@@ -89,7 +90,6 @@ public class Player : MonoBehaviour
     public void HitObstacle()
     {
         _gameManager.ResetGame();
-        _playerInputHandler.MovementDirection = _startingMovementDirection;
     }
 
     public void HitItem(GameObject item)

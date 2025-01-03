@@ -66,15 +66,4 @@ public class SnakeBuilder
         Snake.RemoveLast();
         Object.Destroy(last.gameObject);
     }
-
-    public void DestroySnake()
-    {
-        Snake.Clear();
-        // while (Snake.Count > 0)
-        // {
-        //     RemoveBack();
-        // }
-        //TODO: also remove items from scene
-        //TODO: call this from game manager
-    }
 }
