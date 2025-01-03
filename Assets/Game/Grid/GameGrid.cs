@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -7,6 +8,7 @@ public class GameGrid : MonoBehaviour
 {
     //I am not saving the tiles in a data structure to save memory.
     public float TileSize => _tileSize;
+    private readonly Dictionary<Vector2, GameObject> _occupiedTiles = new();
 
     [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private float _tileSize;
@@ -17,7 +19,19 @@ public class GameGrid : MonoBehaviour
         return newPositionInGrid;
     }
 
-    public Vector2 GetRandomTile()
+    public Vector2 GetRandomUnoccupiedTile()
+    {
+        Vector2 tilePosition = GetRandomTile();
+        while (_occupiedTiles.ContainsKey(tilePosition))
+        {
+            Debug.Log(tilePosition);
+            tilePosition = GetRandomTile();
+        }
+
+        return tilePosition;
+    }
+
+    private Vector2 GetRandomTile()
     {
         Vector2 randomPositionInGrid = new(Random.Range(_collider.bounds.min.x, _collider.bounds.max.x),
             Random.Range(_collider.bounds.min.y, _collider.bounds.max.y));
@@ -35,6 +49,17 @@ public class GameGrid : MonoBehaviour
         Vector2 closestTile = new(gridStartTile.x + tileRowIndex * _tileSize, gridStartTile.y + tileColumnIndex * _tileSize);
         return closestTile;
     }
+
+    public void MarkTileAsOccupied(Vector2 tilePosition, GameObject occupier)
+    {
+        _occupiedTiles.Add(tilePosition, occupier);
+    }
+
+    public void MarkTileAsUnOccupied(Vector2 tilePosition)
+    {
+        _occupiedTiles.Remove(tilePosition);
+    }
+
 
     private void OnDrawGizmosSelected()
     {

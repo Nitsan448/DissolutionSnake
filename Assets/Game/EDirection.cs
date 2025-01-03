@@ -29,23 +29,20 @@ public static class EDirectionExtensions
         return Vector2.zero;
     }
 
-    public static EDirection RotateClockwise(this EDirection direction)
+    public static EDirection GetDirectionFromVector(Vector2 vector)
     {
-        if (direction == EDirection.Left)
-        {
-            return EDirection.Up;
-        }
-        
-        return direction + 1;
-    }
-    
-    public static EDirection RotateCounterClockwise(this EDirection direction)
-    {
-        if (direction == EDirection.Up)
-        {
-            return EDirection.Left;
-        }
+        vector = vector.normalized;
 
-        return direction - 1;
+        if (vector == Vector2.up)
+            return EDirection.Up;
+        else if (vector == Vector2.down)
+            return EDirection.Down;
+        else if (vector == Vector2.left)
+            return EDirection.Left;
+        else if (vector == Vector2.right)
+            return EDirection.Right;
+
+        Debug.LogWarning("Vector is not in correct format");
+        return EDirection.Up;
     }
 }

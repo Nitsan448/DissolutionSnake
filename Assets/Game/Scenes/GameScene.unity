@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3800bd4af8b344e94e8afbcd5b8394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeBetweenSpawns: 4
+  _timeBetweenSpawns: 0.1
   _gameGrid: {fileID: 238635885}
   _itemPrefab: {fileID: 4225752871676050805, guid: 2a21b218553199146a266125663df4da, type: 3}
 --- !u!1 &208742215
@@ -1716,11 +1716,11 @@ PrefabInstance:
       objectReference: {fileID: 238635885}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _snakeStartingSize
-      value: 6
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _timeBetweenMovements
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _obstaclesLayerMask.m_Bits
