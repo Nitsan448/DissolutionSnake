@@ -52,7 +52,7 @@ public class GameGrid : MonoBehaviour
 
     public void MarkTileAsOccupied(Vector2 tilePosition, GameObject occupier)
     {
-        _occupiedTiles.Add(tilePosition, occupier);
+        _occupiedTiles.TryAdd(tilePosition, occupier);
     }
 
     public void MarkTileAsUnOccupied(Vector2 tilePosition)

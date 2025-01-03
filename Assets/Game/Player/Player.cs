@@ -48,8 +48,8 @@ public class Player : MonoBehaviour
         {
             HandleCollisionsInNextTile();
             _lastMovementTime = Time.time;
-            MoveToNextTile();
             _playerInputHandler.DirectionChanged = false;
+            MoveToNextTile();
         }
     }
 
@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
         }
         else if (hit.TryGetComponent(out Item item))
         {
-            HitItem(hit.gameObject);
+            HitItem(item);
         }
     }
 
@@ -92,10 +92,10 @@ public class Player : MonoBehaviour
         _gameManager.ResetGame();
     }
 
-    public void HitItem(GameObject item)
+    public void HitItem(Item item)
     {
-        Destroy(item);
         _gameGrid.MarkTileAsUnOccupied(item.transform.position);
+        item.DestroyItem();
         SnakeBuilder.AddBack();
     }
 }

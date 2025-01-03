@@ -46,7 +46,13 @@ public class ItemSpawner : MonoBehaviour
     {
         Vector2 itemPosition = _gameGrid.GetRandomUnoccupiedTile();
         Item item = Instantiate(_itemPrefab, itemPosition, Quaternion.identity, transform);
+        item.Init(this);
         _items.Add(item);
         _gameGrid.MarkTileAsOccupied(itemPosition, item.gameObject);
+    }
+
+    public void RemoveItem(Item item)
+    {
+        _items.Remove(item);
     }
 }

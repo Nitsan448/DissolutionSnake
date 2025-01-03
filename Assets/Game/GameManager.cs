@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private ItemSpawner _itemSpawner;
     public EGameState GameState { get; private set; }
+    public float TimeSinceGameStarted = 0;
 
     private void Awake()
     {
@@ -20,5 +21,10 @@ public class GameManager : MonoBehaviour
     {
         GameState = EGameState.Finished;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void Update()
+    {
+        TimeSinceGameStarted += Time.deltaTime;
     }
 }
