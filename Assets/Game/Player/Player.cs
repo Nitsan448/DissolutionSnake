@@ -39,12 +39,14 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!(_lastMovementTime + _timeBetweenMovements < Time.time)) return;
-
-        HandleCollisionsInNextTile();
-        _lastMovementTime = Time.time;
-        MoveToNextTile();
-        _playerInputHandler.AcceptMovementInput = true;
+        bool isTimeForNextMovement = _lastMovementTime + _timeBetweenMovements < Time.time;
+        if (isTimeForNextMovement || _playerInputHandler.DirectionChanged)
+        {
+            HandleCollisionsInNextTile();
+            _lastMovementTime = Time.time;
+            MoveToNextTile();
+            _playerInputHandler.DirectionChanged = false;
+        }
     }
 
     private void MoveToNextTile()

@@ -1716,7 +1716,7 @@ PrefabInstance:
       objectReference: {fileID: 238635885}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _snakeStartingSize
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _timeBetweenMovements

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerInputHandler
 {
-    public bool AcceptMovementInput = true;
+    public bool DirectionChanged = false;
     public EDirection MovementDirection;
 
     public PlayerInputHandler(EDirection movementDirection)
@@ -12,10 +12,6 @@ public class PlayerInputHandler
 
     public void HandleInput()
     {
-        //TODO: Move as soon as input is received, don't use accept movement input boolean
-
-        if (!AcceptMovementInput) return;
-
         EDirection previousDirection = MovementDirection;
         if (Input.GetKeyDown(KeyCode.D) && MovementDirection != EDirection.Left)
         {
@@ -34,6 +30,6 @@ public class PlayerInputHandler
             MovementDirection = EDirection.Down;
         }
 
-        if (MovementDirection != previousDirection) AcceptMovementInput = false;
+        DirectionChanged |= previousDirection != MovementDirection;
     }
 }
