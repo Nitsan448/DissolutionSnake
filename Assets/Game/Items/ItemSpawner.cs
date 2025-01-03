@@ -6,11 +6,17 @@ using UnityEngine;
 public class ItemSpawner : MonoBehaviour
 {
     [SerializeField] private float _timeBetweenSpawns;
-    [SerializeField] private GameGrid _gameGrid;
     [SerializeField] private Item _itemPrefab;
+
+    private GameGrid _gameGrid;
     private CancellationTokenSource _spawnItemsCts;
 
     //Use object pooling for items?
+
+    public void Init(GameGrid gameGrid)
+    {
+        _gameGrid = gameGrid;
+    }
 
     private void Start()
     {
@@ -37,7 +43,7 @@ public class ItemSpawner : MonoBehaviour
     private void SpawnItem()
     {
         Vector2 itemPosition = _gameGrid.GetRandomUnoccupiedTile();
-        Instantiate(_itemPrefab, itemPosition, Quaternion.identity, transform);
-        _gameGrid.MarkTileAsOccupied(itemPosition, gameObject);
+        Item item = Instantiate(_itemPrefab, itemPosition, Quaternion.identity, transform);
+        _gameGrid.MarkTileAsOccupied(itemPosition, item.gameObject);
     }
 }

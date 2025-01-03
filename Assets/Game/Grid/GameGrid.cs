@@ -60,6 +60,16 @@ public class GameGrid : MonoBehaviour
         _occupiedTiles.Remove(tilePosition);
     }
 
+    public void ResetGrid()
+    {
+        foreach (KeyValuePair<Vector2, GameObject> tile in _occupiedTiles)
+        {
+            Destroy(tile.Value);
+        }
+
+        _occupiedTiles.Clear();
+    }
+
 
     private void OnDrawGizmosSelected()
     {

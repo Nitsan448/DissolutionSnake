@@ -164,7 +164,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeBetweenSpawns: 2
-  _gameGrid: {fileID: 238635885}
   _itemPrefab: {fileID: 4225752871676050805, guid: 2a21b218553199146a266125663df4da, type: 3}
 --- !u!1 &208742215
 GameObject:
@@ -1593,6 +1592,17 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &1246874811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
+  m_PrefabInstance: {fileID: 2083764850494553341}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4861beddee4f2b349b5c36b08cb89d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2058149598
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,6 +1648,53 @@ Transform:
   - {fileID: 933991411}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2140583170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2140583171}
+  - component: {fileID: 2140583172}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2140583171
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140583170}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2140583172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140583170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 662ff4ddf05ac294fa8832c30009d64f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameGrid: {fileID: 238635885}
+  _player: {fileID: 1246874811}
+  _itemSpawner: {fileID: 206856312}
 --- !u!1001 &2083764850494553341
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1747,3 +1804,4 @@ SceneRoots:
   - {fileID: 238635883}
   - {fileID: 2058149600}
   - {fileID: 206856311}
+  - {fileID: 2140583171}

@@ -8,28 +8,31 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    public SnakeBuilder SnakeBuilder { get; private set; }
+
     [SerializeField] private EDirection _startingMovementDirection = EDirection.Up;
     [SerializeField] private float _timeBetweenMovements;
     [SerializeField] private LayerMask _obstaclesLayerMask;
-    [SerializeField] private GameGrid _gameGrid;
     [SerializeField] private SnakeNode _snakeNodePrefab;
     [SerializeField] private int _snakeStartingSize;
-    private float _lastMovementTime;
-    private Rigidbody2D _rigidbody;
-    private PlayerInputHandler _playerInputHandler;
-    public SnakeBuilder SnakeBuilder { get; private set; }
 
-    private void Awake()
+    private GameGrid _gameGrid;
+    private GameManager _gameManager;
+    private float _lastMovementTime;
+    private PlayerInputHandler _playerInputHandler;
+
+    public void Init(GameGrid gameGrid, GameManager gameManager)
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
+        _gameManager = gameManager;
+        _gameGrid = gameGrid;
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
-        SnakeBuilder = new SnakeBuilder(_gameGrid, _snakeNodePrefab, transform);
+        SnakeBuilder = new SnakeBuilder(_gameGrid, _snakeNodePrefab, transform, _snakeStartingSize);
     }
 
     private void Start()
     {
         transform.position = _gameGrid.GetClosestTile(transform.position);
-        SnakeBuilder.CreateSnake(_snakeStartingSize);
+        SnakeBuilder.CreateSnake();
     }
 
     private void Update()
@@ -85,8 +88,7 @@ public class Player : MonoBehaviour
 
     public void HitObstacle()
     {
-        SnakeBuilder.DestroySnake();
-        SnakeBuilder.CreateSnake(_snakeStartingSize);
+        _gameManager.ResetGame();
         _playerInputHandler.MovementDirection = _startingMovementDirection;
     }
 

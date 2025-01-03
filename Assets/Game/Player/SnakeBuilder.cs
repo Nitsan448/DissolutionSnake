@@ -11,20 +11,22 @@ public class SnakeBuilder
     private GameGrid _gameGrid;
     private SnakeNode _snakeNodePrefab;
     private Transform _playerTransform;
+    private int _snakeStartingSize;
 
-    public SnakeBuilder(GameGrid gameGrid, SnakeNode snakeNodePrefab, Transform playerTransform)
+    public SnakeBuilder(GameGrid gameGrid, SnakeNode snakeNodePrefab, Transform playerTransform, int snakeStartingSize)
     {
         _gameGrid = gameGrid;
         _snakeNodePrefab = snakeNodePrefab;
         _playerTransform = playerTransform;
+        _snakeStartingSize = snakeStartingSize;
     }
 
-    public void CreateSnake(int numberOfSegments)
+    public void CreateSnake()
     {
         Snake = new LinkedList<SnakeNode>();
         AddFront(_playerTransform.position);
 
-        for (int i = 1; i < numberOfSegments; i++)
+        for (int i = 1; i < _snakeStartingSize; i++)
         {
             AddBack();
         }
@@ -67,10 +69,11 @@ public class SnakeBuilder
 
     public void DestroySnake()
     {
-        while (Snake.Count > 0)
-        {
-            RemoveBack();
-        }
+        Snake.Clear();
+        // while (Snake.Count > 0)
+        // {
+        //     RemoveBack();
+        // }
         //TODO: also remove items from scene
         //TODO: call this from game manager
     }
