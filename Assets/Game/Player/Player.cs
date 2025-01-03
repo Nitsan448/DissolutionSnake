@@ -77,17 +77,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void HitObstacle(GameObject hit)
+    private void HitObstacle(GameObject hit)
     {
-        //Hold the middle segment
         //TODO: add snake division
         if (hit.TryGetComponent(out SnakeSegment snakeSegment))
         {
-            LinkedListNode<SnakeSegment> current = _snakeBuilder.Snake.First;
-            for (int i = 1; i < _snakeBuilder.Snake.Count; i++)
+            LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
+            while (current != null)
             {
                 if (snakeSegment == current.Value)
                 {
+                    DivideSnake(current);
+                    return;
                 }
 
                 current = current.Next;
@@ -95,6 +96,18 @@ public class Player : MonoBehaviour
         }
 
         _gameManager.ResetGame();
+    }
+
+    private void DivideSnake(LinkedListNode<SnakeSegment> nodeToStartDividingFrom)
+    {
+        //TODO: add snake dissolution
+        LinkedListNode<SnakeSegment> current = nodeToStartDividingFrom;
+        while (current != null)
+        {
+            LinkedListNode<SnakeSegment> next = current.Next;
+            _snakeBuilder.RemoveSegment(current);
+            current = next;
+        }
     }
 
     public void HitItem(Item item)

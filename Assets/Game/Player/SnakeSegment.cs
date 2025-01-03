@@ -21,7 +21,7 @@ public class SnakeSegment : MonoBehaviour
 
     public void MakeMiddleNode()
     {
-        _spriteRenderer.color = new Color(1, 1, 1, 0.5f);
+        _spriteRenderer.color = new Color(1, 1, 1, 0.7f);
     }
 
     public void MakeNormalNode()

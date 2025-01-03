@@ -12,7 +12,7 @@ public class SnakeBuilder
     private SnakeSegment _snakeSegmentPrefab;
     private Transform _playerTransform;
     private int _snakeStartingSize;
-    private LinkedListNode<SnakeSegment> _middleNode;
+    public LinkedListNode<SnakeSegment> MiddleSegmentNode;
 
     public SnakeBuilder(GameGrid gameGrid, SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize)
     {
@@ -26,7 +26,7 @@ public class SnakeBuilder
     {
         Snake = new LinkedList<SnakeSegment>();
         AddFront(_playerTransform.position);
-        _middleNode = Snake.First;
+        MiddleSegmentNode = Snake.First;
 
         for (int i = 1; i < _snakeStartingSize; i++)
         {
@@ -46,11 +46,11 @@ public class SnakeBuilder
     private void UpdateMiddleNode(bool moveForward)
     {
         if (Snake.Count % 2 == 0) return;
-        if (_middleNode == null) return;
+        if (MiddleSegmentNode == null) return;
 
-        _middleNode.Value.MakeNormalNode();
-        _middleNode = moveForward ? _middleNode.Next : _middleNode.Previous;
-        _middleNode?.Value.MakeMiddleNode();
+        MiddleSegmentNode.Value.MakeNormalNode();
+        MiddleSegmentNode = moveForward ? MiddleSegmentNode.Next : MiddleSegmentNode.Previous;
+        MiddleSegmentNode?.Value.MakeMiddleNode();
     }
 
     private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
@@ -73,6 +73,14 @@ public class SnakeBuilder
         Snake.AddLast(newSegment);
 
         UpdateMiddleNode(true);
+    }
+
+    public void RemoveSegment(LinkedListNode<SnakeSegment> segment)
+    {
+        _gameGrid.MarkTileAsUnOccupied(segment.Value.transform.position);
+        //TODO: optimize this, don't use Remove.
+        Snake.Remove(segment);
+        Object.Destroy(segment.Value.gameObject);
     }
 
     public void RemoveBack()
