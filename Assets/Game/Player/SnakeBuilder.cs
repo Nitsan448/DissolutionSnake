@@ -5,25 +5,26 @@ public class SnakeBuilder
 {
     //TODO: Use object pooling for the snake sections
 
-    public LinkedList<SnakeNode> Snake { get; private set; }
+    public LinkedList<SnakeSegment> Snake { get; private set; }
     public Vector2 HeadPosition => Snake.First.Value.transform.position;
 
     private GameGrid _gameGrid;
-    private SnakeNode _snakeNodePrefab;
+    private SnakeSegment _snakeSegmentPrefab;
     private Transform _playerTransform;
     private int _snakeStartingSize;
+    private LinkedListNode<SnakeSegment> _middleNode;
 
-    public SnakeBuilder(GameGrid gameGrid, SnakeNode snakeNodePrefab, Transform playerTransform, int snakeStartingSize)
+    public SnakeBuilder(GameGrid gameGrid, SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize)
     {
         _gameGrid = gameGrid;
-        _snakeNodePrefab = snakeNodePrefab;
+        _snakeSegmentPrefab = snakeSegmentPrefab;
         _playerTransform = playerTransform;
         _snakeStartingSize = snakeStartingSize;
     }
 
     public void CreateSnake()
     {
-        Snake = new LinkedList<SnakeNode>();
+        Snake = new LinkedList<SnakeSegment>();
         AddFront(_playerTransform.position);
 
         for (int i = 1; i < _snakeStartingSize; i++)
@@ -37,17 +38,31 @@ public class SnakeBuilder
         Snake.AddFirst(CreateSnakeSegment(frontPosition));
         Snake.First.Value.MakeHead();
         _gameGrid.MarkTileAsOccupied(frontPosition, Snake.First.Value.gameObject);
+
+        if (Snake.Count == 1)
+        {
+            _middleNode = Snake.First;
+        }
+        else if (Snake.Count % 2 != 0)
+        {
+            if (_middleNode != null)
+            {
+                _middleNode.Value.MakeNormalNode();
+                _middleNode = _middleNode.Previous;
+                _middleNode?.Value.MakeMiddleNode();
+            }
+        }
     }
 
-    private SnakeNode CreateSnakeSegment(Vector2 segmentPosition)
+    private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
     {
-        return Object.Instantiate(_snakeNodePrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
+        return Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
     }
 
     public void AddBack()
     {
-        SnakeNode lastSegment = Snake.Last.Value;
-        LinkedListNode<SnakeNode> secondToLastSegment = Snake.Last.Previous;
+        SnakeSegment lastSegment = Snake.Last.Value;
+        LinkedListNode<SnakeSegment> secondToLastSegment = Snake.Last.Previous;
 
         EDirection direction = secondToLastSegment == null
             ? EDirection.Down
@@ -55,15 +70,36 @@ public class SnakeBuilder
 
         Vector2 newSegmentPosition = _gameGrid.GetNextTileInDirection(lastSegment.transform.position, direction);
 
-        SnakeNode newSegment = CreateSnakeSegment(newSegmentPosition);
+        SnakeSegment newSegment = CreateSnakeSegment(newSegmentPosition);
         Snake.AddLast(newSegment);
+
+        //TODO: refactor and extract to method
+        if (Snake.Count % 2 != 0)
+        {
+            if (_middleNode != null)
+            {
+                _middleNode.Value.MakeNormalNode();
+                _middleNode = _middleNode.Next;
+                _middleNode?.Value.MakeMiddleNode();
+            }
+        }
     }
 
     public void RemoveBack()
     {
-        SnakeNode last = Snake.Last.Value;
+        SnakeSegment last = Snake.Last.Value;
         _gameGrid.MarkTileAsUnOccupied(last.transform.position);
         Snake.RemoveLast();
         Object.Destroy(last.gameObject);
+
+        if (Snake.Count % 2 != 0)
+        {
+            if (_middleNode != null)
+            {
+                _middleNode.Value.MakeNormalNode();
+                _middleNode = _middleNode.Previous;
+                _middleNode?.Value.MakeMiddleNode();
+            }
+        }
     }
 }

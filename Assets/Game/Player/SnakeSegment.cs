@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeNode : MonoBehaviour
+public class SnakeSegment : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Sprite _headSprite;
@@ -17,5 +17,15 @@ public class SnakeNode : MonoBehaviour
     public void MakeBody()
     {
         _spriteRenderer.sprite = _segmentSprite;
+    }
+
+    public void MakeMiddleNode()
+    {
+        _spriteRenderer.color = new Color(1, 1, 1, 0.5f);
+    }
+
+    public void MakeNormalNode()
+    {
+        _spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 }

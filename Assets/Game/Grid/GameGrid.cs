@@ -4,14 +4,19 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class GameGrid : MonoBehaviour
 {
-    //I am not saving the tiles in a data structure to save memory.
     public float TileSize => _tileSize;
+    private BoxCollider2D _collider;
     private readonly Dictionary<Vector2, GameObject> _occupiedTiles = new();
 
-    [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private float _tileSize;
+
+    private void Awake()
+    {
+        _collider = GetComponent<BoxCollider2D>();
+    }
 
     public Vector2 GetNextTileInDirection(Vector2 positionInGrid, EDirection direction)
     {
@@ -24,7 +29,6 @@ public class GameGrid : MonoBehaviour
         Vector2 tilePosition = GetRandomTile();
         while (_occupiedTiles.ContainsKey(tilePosition))
         {
-            Debug.Log(tilePosition);
             tilePosition = GetRandomTile();
         }
 

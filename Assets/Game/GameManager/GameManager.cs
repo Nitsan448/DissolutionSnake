@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _player.Init(_gameGrid, this);
-        _itemSpawner.Init(_gameGrid);
+        _itemSpawner.Init(_gameGrid, this);
         GameState = EGameState.Running;
     }
 

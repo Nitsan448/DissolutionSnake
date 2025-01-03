@@ -10,14 +10,16 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField] private Item _itemPrefab;
 
     private GameGrid _gameGrid;
+    private GameManager _gameManager;
     private CancellationTokenSource _spawnItemsCts;
 
     //Use object pooling for items?
     private List<Item> _items = new(2);
 
-    public void Init(GameGrid gameGrid)
+    public void Init(GameGrid gameGrid, GameManager gameManager)
     {
         _gameGrid = gameGrid;
+        _gameManager = gameManager;
     }
 
     private void Start()
@@ -34,10 +36,10 @@ public class ItemSpawner : MonoBehaviour
     {
         using (_spawnItemsCts = new CancellationTokenSource())
         {
-            while (true)
+            while (!_spawnItemsCts.IsCancellationRequested)
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenSpawns), cancellationToken: _spawnItemsCts.Token);
-                if (_items.Count < 2) SpawnItem();
+                if (_items.Count < 2 && _gameManager.GameState == EGameState.Running) SpawnItem();
             }
         }
     }
