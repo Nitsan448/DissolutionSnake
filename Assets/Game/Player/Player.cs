@@ -100,10 +100,9 @@ public class Player : MonoBehaviour
 
     private void SplitSnake(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)
     {
-        // TODO: Set new middle
-
         LinkedList<SnakeSegment> splitSection = SplitSection(nodeToStartSplittingFrom);
         DissoulteSplitSection(splitSection).Forget();
+        _snakeBuilder.SetNewMiddleNode();
     }
 
     private LinkedList<SnakeSegment> SplitSection(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)

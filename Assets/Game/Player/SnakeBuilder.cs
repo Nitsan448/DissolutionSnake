@@ -96,4 +96,16 @@ public class SnakeBuilder
 
         UpdateMiddleNode(false);
     }
+
+    public void SetNewMiddleNode()
+    {
+        MiddleSegmentNode.Value.MakeNormalNode();
+        LinkedListNode<SnakeSegment> current = Snake.First;
+        for (int i = 1; i < Snake.Count / 2 + 1; i++)
+        {
+            current = current.Next;
+        }
+
+        MiddleSegmentNode = current;
+    }
 }
