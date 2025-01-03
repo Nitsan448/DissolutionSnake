@@ -26,6 +26,7 @@ public class SnakeBuilder
     {
         Snake = new LinkedList<SnakeSegment>();
         AddFront(_playerTransform.position);
+        _middleNode = Snake.First;
 
         for (int i = 1; i < _snakeStartingSize; i++)
         {
@@ -39,19 +40,17 @@ public class SnakeBuilder
         Snake.First.Value.MakeHead();
         _gameGrid.MarkTileAsOccupied(frontPosition, Snake.First.Value.gameObject);
 
-        if (Snake.Count == 1)
-        {
-            _middleNode = Snake.First;
-        }
-        else if (Snake.Count % 2 != 0)
-        {
-            if (_middleNode != null)
-            {
-                _middleNode.Value.MakeNormalNode();
-                _middleNode = _middleNode.Previous;
-                _middleNode?.Value.MakeMiddleNode();
-            }
-        }
+        UpdateMiddleNode(false);
+    }
+
+    private void UpdateMiddleNode(bool moveForward)
+    {
+        if (Snake.Count % 2 == 0) return;
+        if (_middleNode == null) return;
+
+        _middleNode.Value.MakeNormalNode();
+        _middleNode = moveForward ? _middleNode.Next : _middleNode.Previous;
+        _middleNode?.Value.MakeMiddleNode();
     }
 
     private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
@@ -73,16 +72,7 @@ public class SnakeBuilder
         SnakeSegment newSegment = CreateSnakeSegment(newSegmentPosition);
         Snake.AddLast(newSegment);
 
-        //TODO: refactor and extract to method
-        if (Snake.Count % 2 != 0)
-        {
-            if (_middleNode != null)
-            {
-                _middleNode.Value.MakeNormalNode();
-                _middleNode = _middleNode.Next;
-                _middleNode?.Value.MakeMiddleNode();
-            }
-        }
+        UpdateMiddleNode(true);
     }
 
     public void RemoveBack()
@@ -92,14 +82,6 @@ public class SnakeBuilder
         Snake.RemoveLast();
         Object.Destroy(last.gameObject);
 
-        if (Snake.Count % 2 != 0)
-        {
-            if (_middleNode != null)
-            {
-                _middleNode.Value.MakeNormalNode();
-                _middleNode = _middleNode.Previous;
-                _middleNode?.Value.MakeMiddleNode();
-            }
-        }
+        UpdateMiddleNode(false);
     }
 }
