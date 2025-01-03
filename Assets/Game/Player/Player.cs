@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
 
     private void HitObstacle(GameObject hit)
     {
-        //TODO: add snake division
+        //TODO: Refactor
         if (hit.TryGetComponent(out SnakeSegment snakeSegment))
         {
             LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
@@ -87,7 +87,7 @@ public class Player : MonoBehaviour
             {
                 if (snakeSegment == current.Value)
                 {
-                    DivideSnake(current);
+                    SplitSnake(current);
                     return;
                 }
 
@@ -98,15 +98,39 @@ public class Player : MonoBehaviour
         _gameManager.ResetGame();
     }
 
-    private void DivideSnake(LinkedListNode<SnakeSegment> nodeToStartDividingFrom)
+    private void SplitSnake(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)
     {
-        //TODO: add snake dissolution
-        LinkedListNode<SnakeSegment> current = nodeToStartDividingFrom;
+        // TODO: Set new middle
+
+        LinkedList<SnakeSegment> splitSection = SplitSection(nodeToStartSplittingFrom);
+        DissoulteSplitSection(splitSection).Forget();
+    }
+
+    private LinkedList<SnakeSegment> SplitSection(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)
+    {
+        // TODO: Refactor
+        LinkedListNode<SnakeSegment> current = nodeToStartSplittingFrom;
+        LinkedList<SnakeSegment> splitSection = new LinkedList<SnakeSegment>();
+
         while (current != null)
         {
             LinkedListNode<SnakeSegment> next = current.Next;
-            _snakeBuilder.RemoveSegment(current);
+            splitSection.AddLast(current.Value);
+            _snakeBuilder.RemoveSegmentWithoutDestroying(current);
             current = next;
+        }
+
+        return splitSection;
+    }
+
+    private async UniTask DissoulteSplitSection(LinkedList<SnakeSegment> splitSection)
+    {
+        foreach (SnakeSegment segment in splitSection)
+        {
+            _snakeBuilder.DestroySegment(segment);
+
+            // TODO: Destroy each segment faster than the previous one
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         }
     }
 

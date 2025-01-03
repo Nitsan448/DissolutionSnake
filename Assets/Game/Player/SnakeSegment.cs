@@ -7,8 +7,7 @@ public class SnakeSegment : MonoBehaviour
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Sprite _headSprite;
     [SerializeField] private Sprite _segmentSprite;
-
-
+    
     public void MakeHead()
     {
         _spriteRenderer.sprite = _headSprite;

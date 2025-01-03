@@ -1710,12 +1710,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _snakeStartingSize
-      value: 6
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _snakeSegmentPrefab
       value: 
       objectReference: {fileID: 2671592054587622877, guid: c70444f57711d474bbc1c7f2291bb15f, type: 3}
+    - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
+      propertyPath: _timeBetweenMovements
+      value: 0.08
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

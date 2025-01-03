@@ -75,12 +75,16 @@ public class SnakeBuilder
         UpdateMiddleNode(true);
     }
 
-    public void RemoveSegment(LinkedListNode<SnakeSegment> segment)
+    public void RemoveSegmentWithoutDestroying(LinkedListNode<SnakeSegment> segmentNode)
     {
-        _gameGrid.MarkTileAsUnOccupied(segment.Value.transform.position);
         //TODO: optimize this, don't use Remove.
-        Snake.Remove(segment);
-        Object.Destroy(segment.Value.gameObject);
+        Snake.Remove(segmentNode);
+    }
+
+    public void DestroySegment(SnakeSegment segment)
+    {
+        _gameGrid.MarkTileAsUnOccupied(segment.transform.position);
+        Object.Destroy(segment.gameObject);
     }
 
     public void RemoveBack()
