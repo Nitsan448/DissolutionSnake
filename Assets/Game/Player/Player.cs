@@ -74,9 +74,6 @@ public class Player : MonoBehaviour
             //TODO: instead of simply moving, create a new head and remove the tail.
             //TODO: refactor
 
-            Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
-                _playerInputHandler.MovementDirection);
-            HandleCollisionsInNextTile(nextTilePosition);
             _snake.First.Value.MakeBody();
             _snake.AddFirst(CreateSnakeSegment(_gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
                 _playerInputHandler.MovementDirection)));
@@ -86,15 +83,17 @@ public class Player : MonoBehaviour
             Destroy(last.gameObject);
 
             _playerInputHandler.AcceptMovementInput = true;
+            HandleCollisionsInNextTile();
             await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenMovements), delayTiming: PlayerLoopTiming.FixedUpdate,
                 cancellationToken: _moveCts.Token);
         }
     }
 
 
-    private void HandleCollisionsInNextTile(Vector2 nextTilePosition)
+    private void HandleCollisionsInNextTile()
     {
-        //Problem with overlap point
+        Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snake.First.Value.transform.position,
+            _playerInputHandler.MovementDirection);
         Collider2D hit = Physics2D.OverlapBox(nextTilePosition, _gameGrid.TileSize * Vector2.one / 2, 0);
         if (!hit) return;
         Debug.Log(hit.gameObject.name);
