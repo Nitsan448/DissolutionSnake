@@ -17,47 +17,19 @@ public class Player : MonoBehaviour
     private float _lastMovementTime;
     private Rigidbody2D _rigidbody;
     private PlayerInputHandler _playerInputHandler;
-
-    public LinkedList<SnakeNode> Snake { get; private set; }
-
-
-    //TODO: Use linked list for snake segments
-    //TODO: Use object pooling for the snake sections
+    public SnakeBuilder SnakeBuilder { get; private set; }
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
+        SnakeBuilder = new SnakeBuilder(_gameGrid, _snakeNodePrefab, transform);
     }
 
     private void Start()
     {
         transform.position = _gameGrid.GetClosestTile(transform.position);
-        CreateSnake(_snakeStartingSize);
-    }
-
-    private void CreateSnake(int numberOfSegments)
-    {
-        Snake = new LinkedList<SnakeNode>();
-        AddFront(transform.position);
-
-        for (int i = 1; i < numberOfSegments; i++)
-        {
-            AddBack();
-            // Snake.AddLast(CreateSnakeSegment(transform.position + (Vector3.down * i)));
-        }
-    }
-
-    private void AddFront(Vector2 frontPosition)
-    {
-        Snake.AddFirst(CreateSnakeSegment(frontPosition));
-        Snake.First.Value.MakeHead();
-        _gameGrid.MarkTileAsOccupied(frontPosition, Snake.First.Value.gameObject);
-    }
-
-    private SnakeNode CreateSnakeSegment(Vector2 segmentPosition)
-    {
-        return Instantiate(_snakeNodePrefab, segmentPosition, Quaternion.identity, parent: transform);
+        SnakeBuilder.CreateSnake(_snakeStartingSize);
     }
 
     private void Update()
@@ -77,27 +49,19 @@ public class Player : MonoBehaviour
 
     private void MoveToNextTile()
     {
-        Snake.First.Value.MakeBody();
+        SnakeBuilder.Snake.First.Value.MakeBody();
         Vector2 newFrontPosition =
-            _gameGrid.GetNextTileInDirection(Snake.First.Value.transform.position, _playerInputHandler.MovementDirection);
-        AddFront(newFrontPosition);
-        RemoveBack();
-    }
-
-    private void RemoveBack()
-    {
-        SnakeNode last = Snake.Last.Value;
-        _gameGrid.MarkTileAsUnOccupied(last.transform.position);
-        Snake.RemoveLast();
-        Destroy(last.gameObject);
+            _gameGrid.GetNextTileInDirection(SnakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
+        SnakeBuilder.AddFront(newFrontPosition);
+        SnakeBuilder.RemoveBack();
     }
 
     private void HandleCollisionsInNextTile()
     {
-        Vector2 headPosition = Snake.First.Value.transform.position;
-        Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(headPosition, _playerInputHandler.MovementDirection);
+        Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(SnakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
 
-        RaycastHit2D hit = Physics2D.Raycast(headPosition, nextTilePosition - headPosition, _gameGrid.TileSize);
+        Vector2 rayCastDirection = nextTilePosition - SnakeBuilder.HeadPosition;
+        RaycastHit2D hit = Physics2D.Raycast(SnakeBuilder.HeadPosition, rayCastDirection, _gameGrid.TileSize);
 
         if (hit)
         {
@@ -119,44 +83,15 @@ public class Player : MonoBehaviour
 
     public void HitObstacle()
     {
-        DestroySnake();
-        CreateSnake(_snakeStartingSize);
+        SnakeBuilder.DestroySnake();
+        SnakeBuilder.CreateSnake(_snakeStartingSize);
         _playerInputHandler.MovementDirection = _startingMovementDirection;
-    }
-
-    private void DestroySnake()
-    {
-        foreach (SnakeNode segment in Snake)
-        {
-            Destroy(segment.gameObject);
-        }
-
-        // Clear the linked list
-        Snake.Clear();
-
-        //TODO: also remove items from scene
-        //TODO: move this to game manager
     }
 
     public void HitItem(GameObject item)
     {
         Destroy(item);
         _gameGrid.MarkTileAsUnOccupied(item.transform.position);
-        AddBack();
-    }
-
-    private void AddBack()
-    {
-        SnakeNode lastSegment = Snake.Last.Value;
-        LinkedListNode<SnakeNode> secondToLastSegment = Snake.Last.Previous;
-
-        EDirection direction = secondToLastSegment == null
-            ? EDirection.Down
-            : EDirectionExtensions.GetDirectionFromVector(lastSegment.transform.position - secondToLastSegment.Value.transform.position);
-
-        Vector2 newSegmentPosition = _gameGrid.GetNextTileInDirection(lastSegment.transform.position, direction);
-
-        SnakeNode newSegment = CreateSnakeSegment(newSegmentPosition);
-        Snake.AddLast(newSegment);
+        SnakeBuilder.AddBack();
     }
 }
