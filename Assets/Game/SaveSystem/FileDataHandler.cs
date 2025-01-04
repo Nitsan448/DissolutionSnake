@@ -46,7 +46,7 @@ public class FileDataHandler
         {
             dataToLoad = reader.ReadToEnd();
         }
-        
+
         return JsonUtility.FromJson<GameData>(dataToLoad);
     }
 

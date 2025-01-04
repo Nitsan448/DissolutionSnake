@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-public class SnakeBuilder : IDataPersistence
+public class SnakeBuilder : IDataPersistence, IDisposable
 {
     //TODO: Use object pooling for the snake sections
 
@@ -20,6 +22,12 @@ public class SnakeBuilder : IDataPersistence
         _snakeSegmentPrefab = snakeSegmentPrefab;
         _playerTransform = playerTransform;
         _snakeStartingSize = snakeStartingSize;
+        DataPersistenceManager.Instance.Register(this);
+    }
+
+    public void Dispose()
+    {
+        DataPersistenceManager.Instance.Unregister(this);
     }
 
     public void CreateNewSnake()
@@ -114,7 +122,7 @@ public class SnakeBuilder : IDataPersistence
         LinkedListNode<SnakeSegment> current = Snake.First;
         while (current != null)
         {
-            dataToSave.Snake.AddLast(current.Value.GetPersistentData());
+            dataToSave.Snake.Add(current.Value.GetPersistentData());
             current = current.Next;
         }
     }
@@ -122,6 +130,7 @@ public class SnakeBuilder : IDataPersistence
     public void LoadData(GameData loadedData)
     {
         DestroySnake();
+        CreateSnakeFromData(loadedData.Snake);
     }
 
     private void DestroySnake()
@@ -132,7 +141,14 @@ public class SnakeBuilder : IDataPersistence
         }
     }
 
-    private void CreateSnakeFromData(LinkedList<SnakeSegment> snake)
+    private void CreateSnakeFromData(List<SnakeSegmentPersistentData> snakeData)
     {
+        Snake.Clear();
+        foreach (SnakeSegmentPersistentData snakeSegmentPersistentData in snakeData)
+        {
+            Snake.AddLast(CreateSnakeSegment(snakeSegmentPersistentData.Position));
+        }
+
+        Snake.First.Value.MakeHead();
     }
 }

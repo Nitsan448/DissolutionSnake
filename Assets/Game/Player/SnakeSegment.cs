@@ -45,6 +45,6 @@ public class SnakeSegment : MonoBehaviour
 
     public SnakeSegmentPersistentData GetPersistentData()
     {
-        return new SnakeSegmentPersistentData();
+        return new SnakeSegmentPersistentData(transform.position);
     }
 }

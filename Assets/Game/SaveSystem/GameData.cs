@@ -5,10 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    public LinkedList<SnakeSegmentPersistentData> Snake;
+    public List<SnakeSegmentPersistentData> Snake;
 
     public GameData()
     {
-        Snake = new LinkedList<SnakeSegmentPersistentData>();
+        Snake = new List<SnakeSegmentPersistentData>();
     }
 }

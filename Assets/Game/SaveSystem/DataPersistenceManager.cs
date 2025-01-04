@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class DataPersistenceManager : MonoBehaviour
@@ -41,9 +42,10 @@ public class DataPersistenceManager : MonoBehaviour
         _dataPersistenceObjects.Remove(dataPersistenceObject);
     }
 
+    [Button]
     public void SaveGame()
     {
-        _gameData ??= new GameData();
+        _gameData = new GameData();
 
         foreach (IDataPersistence dataPersistenceObject in _dataPersistenceObjects)
         {
@@ -53,6 +55,7 @@ public class DataPersistenceManager : MonoBehaviour
         _fileDataHandler.TrySavingData(_gameData);
     }
 
+    [Button]
     public void LoadGame()
     {
         _gameData = _fileDataHandler.TryLoadingData();
