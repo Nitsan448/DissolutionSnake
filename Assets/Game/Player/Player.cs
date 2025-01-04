@@ -8,6 +8,9 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDataPersistence
 {
+    //TODO: rename
+    public Action<int> ItemEaten;
+
     [SerializeField] private EDirection _startingMovementDirection = EDirection.Up;
     [SerializeField] private float _timeBetweenMovements;
     [SerializeField] private LayerMask _obstaclesLayerMask;
@@ -96,6 +99,7 @@ public class Player : MonoBehaviour, IDataPersistence
 
     public void HitItem(Item item)
     {
+        ItemEaten?.Invoke(item.ItemScore);
         _gameGrid.MarkTileAsUnOccupied(item.transform.position);
         item.DestroyItem();
         _snakeBuilder.AddBack();

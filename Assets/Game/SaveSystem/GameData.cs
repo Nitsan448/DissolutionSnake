@@ -8,6 +8,8 @@ public class GameData
     public List<Vector2> SnakeSegmentPositions;
     public List<Vector2> ItemPositions;
     public EDirection MovementDirection;
+    public int TimeSinceGameStarted;
+    public int CurrentScore;
 
     public GameData()
     {
