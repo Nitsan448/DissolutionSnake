@@ -39,6 +39,7 @@ public class ItemSpawner : MonoBehaviour
             while (!_spawnItemsCts.IsCancellationRequested)
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenSpawns), cancellationToken: _spawnItemsCts.Token);
+                //TODO: make max items a serialized filled
                 if (_items.Count < 2 && _gameManager.GameState == EGameState.Running) SpawnItem();
             }
         }

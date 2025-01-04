@@ -42,4 +42,9 @@ public class SnakeSegment : MonoBehaviour
     {
         _collider.enabled = false;
     }
+
+    public SnakeSegmentPersistentData GetPersistentData()
+    {
+        return new SnakeSegmentPersistentData();
+    }
 }

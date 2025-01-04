@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeBuilder
+public class SnakeBuilder : IDataPersistence
 {
     //TODO: Use object pooling for the snake sections
 
@@ -22,7 +22,7 @@ public class SnakeBuilder
         _snakeStartingSize = snakeStartingSize;
     }
 
-    public void CreateSnake()
+    public void CreateNewSnake()
     {
         Snake = new LinkedList<SnakeSegment>();
         AddFront(_playerTransform.position);
@@ -91,10 +91,8 @@ public class SnakeBuilder
     public void RemoveBack()
     {
         SnakeSegment last = Snake.Last.Value;
-        _gameGrid.MarkTileAsUnOccupied(last.transform.position);
         Snake.RemoveLast();
-        Object.Destroy(last.gameObject);
-
+        DestroySegment(last);
         UpdateMiddleNode(false);
     }
 
@@ -108,5 +106,33 @@ public class SnakeBuilder
         }
 
         MiddleSegmentNode = current;
+    }
+
+
+    public void SaveData(GameData dataToSave)
+    {
+        LinkedListNode<SnakeSegment> current = Snake.First;
+        while (current != null)
+        {
+            dataToSave.Snake.AddLast(current.Value.GetPersistentData());
+            current = current.Next;
+        }
+    }
+
+    public void LoadData(GameData loadedData)
+    {
+        DestroySnake();
+    }
+
+    private void DestroySnake()
+    {
+        while (Snake.Count > 0)
+        {
+            RemoveBack();
+        }
+    }
+
+    private void CreateSnakeFromData(LinkedList<SnakeSegment> snake)
+    {
     }
 }

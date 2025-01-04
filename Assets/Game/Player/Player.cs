@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         transform.position = _gameGrid.GetClosestTile(transform.position);
-        _snakeBuilder.CreateSnake();
+        _snakeBuilder.CreateNewSnake();
     }
 
     private void Update()
@@ -70,6 +70,7 @@ public class Player : MonoBehaviour
         bool hitSnakeSegment = hit.TryGetComponent(out SnakeSegment snakeSegment);
         if (hitSnakeSegment)
         {
+            //Search for hit segment starting from middle node and ending at the tail
             LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
             while (current != null)
             {
