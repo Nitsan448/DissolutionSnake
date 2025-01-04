@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 public class SnakeSplitter
 {
     private SnakeBuilder _snakeBuilder;
 
-    public SnakeSplitter(SnakeBuilder snakeBuilder)
+    //TODO: rename
+    private float _snakeDissolutionStartingSpeed;
+
+    public SnakeSplitter(SnakeBuilder snakeBuilder, float snakeDissolutionStartingSpeed)
     {
         _snakeBuilder = snakeBuilder;
+        _snakeDissolutionStartingSpeed = snakeDissolutionStartingSpeed;
     }
 
     public void SplitSnake(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)
@@ -38,12 +43,15 @@ public class SnakeSplitter
 
     private async UniTask DissoulteSplitSection(LinkedList<SnakeSegment> splitSection)
     {
+        float currentSegmentIndex = 0;
+        int numberOfSegmentsToDestroy = splitSection.Count;
         foreach (SnakeSegment segment in splitSection)
         {
             _snakeBuilder.DestroySegment(segment);
-
-            // TODO: Destroy each segment faster than the previous one
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            float delayUntilNextSegmentIsDestroyed = _snakeDissolutionStartingSpeed -
+                                                     ((currentSegmentIndex / numberOfSegmentsToDestroy) * _snakeDissolutionStartingSpeed);
+            await UniTask.Delay(TimeSpan.FromSeconds(delayUntilNextSegmentIsDestroyed), delayTiming: PlayerLoopTiming.FixedUpdate);
+            currentSegmentIndex++;
         }
     }
 }

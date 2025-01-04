@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask _obstaclesLayerMask;
     [SerializeField] private SnakeSegment _snakeSegmentPrefab;
     [SerializeField] private int _snakeStartingSize;
+    [SerializeField] private float _snakeDissolutionStartingSpeed;
 
     private GameGrid _gameGrid;
     private GameManager _gameManager;
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
         _gameGrid = gameGrid;
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
         _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
-        _snakeSplitter = new SnakeSplitter(_snakeBuilder);
+        _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
     }
 
     private void Start()

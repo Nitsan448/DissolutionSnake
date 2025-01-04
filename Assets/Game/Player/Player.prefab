@@ -45,9 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startingMovementDirection: 0
-  _timeBetweenMovements: 0.1
+  _timeBetweenMovements: 0.07
   _obstaclesLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  _snakeNodePrefab: {fileID: 2671592054587622877, guid: c70444f57711d474bbc1c7f2291bb15f, type: 3}
-  _snakeStartingSize: 3
+  _snakeSegmentPrefab: {fileID: 2671592054587622877, guid: c70444f57711d474bbc1c7f2291bb15f, type: 3}
+  _snakeStartingSize: 30
+  _snakeDissolutionStartingSpeed: 0.1
