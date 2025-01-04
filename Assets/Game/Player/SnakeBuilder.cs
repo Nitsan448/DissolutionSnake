@@ -75,8 +75,9 @@ public class SnakeBuilder
         UpdateMiddleNode(true);
     }
 
-    public void RemoveSegmentWithoutDestroying(LinkedListNode<SnakeSegment> segmentNode)
+    public void DetachSegment(LinkedListNode<SnakeSegment> segmentNode)
     {
+        segmentNode.Value.DisableCollider();
         Snake.Remove(segmentNode);
     }
 

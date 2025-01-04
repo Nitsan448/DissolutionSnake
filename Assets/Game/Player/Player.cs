@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
         {
             LinkedListNode<SnakeSegment> next = current.Next;
             splitSection.AddLast(current.Value);
-            _snakeBuilder.RemoveSegmentWithoutDestroying(current);
+            _snakeBuilder.DetachSegment(current);
             current = next;
         }
 
