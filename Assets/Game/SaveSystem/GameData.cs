@@ -5,10 +5,14 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
-    public List<SnakeSegmentPersistentData> Snake;
+    public List<Vector2> SnakeSegmentPositions;
+    public List<Vector2> ItemPositions;
+    public EDirection MovementDirection;
 
     public GameData()
     {
-        Snake = new List<SnakeSegmentPersistentData>();
+        SnakeSegmentPositions = new List<Vector2>();
+        ItemPositions = new List<Vector2>();
+        MovementDirection = EDirection.Up;
     }
 }

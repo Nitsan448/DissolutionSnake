@@ -106,7 +106,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     public void SetNewMiddleNode()
     {
-        MiddleSegmentNode.Value.MakeNormalNode();
+        MiddleSegmentNode?.Value.MakeNormalNode();
         LinkedListNode<SnakeSegment> current = Snake.First;
         for (int i = 1; i < Snake.Count / 2 + 1; i++)
         {
@@ -122,7 +122,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         LinkedListNode<SnakeSegment> current = Snake.First;
         while (current != null)
         {
-            dataToSave.Snake.Add(current.Value.GetPersistentData());
+            dataToSave.SnakeSegmentPositions.Add(current.Value.transform.position);
             current = current.Next;
         }
     }
@@ -130,7 +130,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
     public void LoadData(GameData loadedData)
     {
         DestroySnake();
-        CreateSnakeFromData(loadedData.Snake);
+        CreateSnakeFromData(loadedData.SnakeSegmentPositions);
     }
 
     private void DestroySnake()
@@ -141,14 +141,15 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         }
     }
 
-    private void CreateSnakeFromData(List<SnakeSegmentPersistentData> snakeData)
+    private void CreateSnakeFromData(List<Vector2> snakeData)
     {
         Snake.Clear();
-        foreach (SnakeSegmentPersistentData snakeSegmentPersistentData in snakeData)
+        foreach (Vector2 snakeSegmentPosition in snakeData)
         {
-            Snake.AddLast(CreateSnakeSegment(snakeSegmentPersistentData.Position));
+            Snake.AddLast(CreateSnakeSegment(snakeSegmentPosition));
         }
 
         Snake.First.Value.MakeHead();
+        SetNewMiddleNode();
     }
 }

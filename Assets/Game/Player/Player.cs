@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private EDirection _startingMovementDirection = EDirection.Up;
     [SerializeField] private float _timeBetweenMovements;
@@ -31,6 +31,12 @@ public class Player : MonoBehaviour
         _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
         _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
         _collisionHandler = new CollisionHandler(this, _obstaclesLayerMask);
+        DataPersistenceManager.Instance.Register(this);
+    }
+
+    private void OnDestroy()
+    {
+        DataPersistenceManager.Instance.Unregister(this);
     }
 
     private void Start()
@@ -102,5 +108,15 @@ public class Player : MonoBehaviour
             _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
         _snakeBuilder.AddFront(newFrontPosition);
         _snakeBuilder.RemoveBack();
+    }
+
+    public void SaveData(GameData dataToSave)
+    {
+        dataToSave.MovementDirection = _playerInputHandler.MovementDirection;
+    }
+
+    public void LoadData(GameData loadedData)
+    {
+        _playerInputHandler.MovementDirection = loadedData.MovementDirection;
     }
 }

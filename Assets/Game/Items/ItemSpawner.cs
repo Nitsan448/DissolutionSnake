@@ -4,7 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class ItemSpawner : MonoBehaviour
+public class ItemSpawner : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private float _timeBetweenSpawns;
     [SerializeField] private int _maximumItems = 2;
@@ -21,6 +21,7 @@ public class ItemSpawner : MonoBehaviour
     {
         _gameGrid = gameGrid;
         _gameManager = gameManager;
+        DataPersistenceManager.Instance.Register(this);
     }
 
     private void Start()
@@ -31,6 +32,7 @@ public class ItemSpawner : MonoBehaviour
     private void OnDestroy()
     {
         _spawnItemsCts?.Cancel();
+        DataPersistenceManager.Instance.Unregister(this);
     }
 
     private async UniTask SpawnItems()
@@ -49,14 +51,42 @@ public class ItemSpawner : MonoBehaviour
     private void SpawnItem()
     {
         Vector2 itemPosition = _gameGrid.GetRandomUnoccupiedTile();
-        Item item = Instantiate(_itemPrefab, itemPosition, Quaternion.identity, transform);
+        SpawnItemAtPosition(itemPosition);
+    }
+
+    private void SpawnItemAtPosition(Vector2 position)
+    {
+        Item item = Instantiate(_itemPrefab, position, Quaternion.identity, transform);
         item.Init(this);
         _items.Add(item);
-        _gameGrid.MarkTileAsOccupied(itemPosition, item.gameObject);
+        _gameGrid.MarkTileAsOccupied(position, item.gameObject);
     }
 
     public void RemoveItem(Item item)
     {
         _items.Remove(item);
+    }
+
+    public void SaveData(GameData dataToSave)
+    {
+        foreach (Item item in _items)
+        {
+            dataToSave.ItemPositions.Add(item.transform.position);
+        }
+    }
+
+    public void LoadData(GameData loadedData)
+    {
+        foreach (Item item in _items)
+        {
+            Destroy(item.gameObject);
+        }
+
+        _items.Clear();
+
+        foreach (Vector2 itemPosition in loadedData.ItemPositions)
+        {
+            SpawnItemAtPosition(itemPosition);
+        }
     }
 }
