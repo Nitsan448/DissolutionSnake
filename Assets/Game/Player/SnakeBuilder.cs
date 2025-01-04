@@ -6,6 +6,7 @@ using Object = UnityEngine.Object;
 public class SnakeBuilder : IDataPersistence, IDisposable
 {
     //TODO: Use object pooling for the snake sections
+    //TODO: refactor
 
     public LinkedList<SnakeSegment> Snake { get; private set; }
     public Vector2 HeadPosition => Snake.First.Value.transform.position;
@@ -55,10 +56,13 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private void UpdateMiddleNode(bool moveForward)
     {
-        SetNewMiddleNode();
-        return;
-        if (Snake.Count % 2 == 0) return;
-        if (MiddleSegmentNode == null) return;
+        bool moveMiddleNode = moveForward ? Snake.Count % 2 == 0 : Snake.Count % 2 == 1;
+        if (!moveMiddleNode) return;
+        if (MiddleSegmentNode == null)
+        {
+            SetNewMiddleNode();
+            return;
+        }
 
         MiddleSegmentNode.Value.MakeNormalNode();
         MiddleSegmentNode = moveForward ? MiddleSegmentNode.Next : MiddleSegmentNode.Previous;
