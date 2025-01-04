@@ -1904,6 +1904,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
+      propertyPath: _snakeDissolutionStartingSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
