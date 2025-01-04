@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     {
         Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
 
+
         Vector2 rayCastDirection = nextTilePosition - _snakeBuilder.HeadPosition;
         RaycastHit2D hit = Physics2D.Raycast(_snakeBuilder.HeadPosition, rayCastDirection, _gameGrid.TileSize);
 

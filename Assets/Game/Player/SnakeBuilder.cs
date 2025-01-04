@@ -77,7 +77,6 @@ public class SnakeBuilder
 
     public void RemoveSegmentWithoutDestroying(LinkedListNode<SnakeSegment> segmentNode)
     {
-        //TODO: optimize this, don't use Remove.
         Snake.Remove(segmentNode);
     }
 
