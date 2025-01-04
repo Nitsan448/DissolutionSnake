@@ -40,6 +40,8 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         {
             AddBack();
         }
+
+        SetNewMiddleNode();
     }
 
     public void AddFront(Vector2 frontPosition)
@@ -53,6 +55,8 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private void UpdateMiddleNode(bool moveForward)
     {
+        SetNewMiddleNode();
+        return;
         if (Snake.Count % 2 == 0) return;
         if (MiddleSegmentNode == null) return;
 
@@ -107,15 +111,16 @@ public class SnakeBuilder : IDataPersistence, IDisposable
     public void SetNewMiddleNode()
     {
         MiddleSegmentNode?.Value.MakeNormalNode();
+
         LinkedListNode<SnakeSegment> current = Snake.First;
-        for (int i = 1; i < Snake.Count / 2 + 1; i++)
+        for (int i = 0; i < Snake.Count / 2; i++)
         {
             current = current.Next;
         }
 
         MiddleSegmentNode = current;
+        MiddleSegmentNode?.Value.MakeMiddleNode();
     }
-
 
     public void SaveData(GameData dataToSave)
     {
