@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private float _lastMovementTime;
     private PlayerInputHandler _playerInputHandler;
     private SnakeBuilder _snakeBuilder;
+    private SnakeSplitter _snakeSplitter;
 
     public void Init(GameGrid gameGrid, GameManager gameManager)
     {
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
         _gameGrid = gameGrid;
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
         _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
+        _snakeSplitter = new SnakeSplitter(_snakeBuilder);
     }
 
     private void Start()
@@ -88,7 +90,7 @@ public class Player : MonoBehaviour
             {
                 if (snakeSegment == current.Value)
                 {
-                    SplitSnake(current);
+                    _snakeSplitter.SplitSnake(current);
                     return;
                 }
 
@@ -97,41 +99,6 @@ public class Player : MonoBehaviour
         }
 
         _gameManager.ResetGame();
-    }
-
-    private void SplitSnake(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)
-    {
-        LinkedList<SnakeSegment> splitSection = SplitSection(nodeToStartSplittingFrom);
-        DissoulteSplitSection(splitSection).Forget();
-        _snakeBuilder.SetNewMiddleNode();
-    }
-
-    private LinkedList<SnakeSegment> SplitSection(LinkedListNode<SnakeSegment> nodeToStartSplittingFrom)
-    {
-        // TODO: Refactor
-        LinkedListNode<SnakeSegment> current = nodeToStartSplittingFrom;
-        LinkedList<SnakeSegment> splitSection = new LinkedList<SnakeSegment>();
-
-        while (current != null)
-        {
-            LinkedListNode<SnakeSegment> next = current.Next;
-            splitSection.AddLast(current.Value);
-            _snakeBuilder.DetachSegment(current);
-            current = next;
-        }
-
-        return splitSection;
-    }
-
-    private async UniTask DissoulteSplitSection(LinkedList<SnakeSegment> splitSection)
-    {
-        foreach (SnakeSegment segment in splitSection)
-        {
-            _snakeBuilder.DestroySegment(segment);
-
-            // TODO: Destroy each segment faster than the previous one
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-        }
     }
 
     public void HitItem(Item item)
