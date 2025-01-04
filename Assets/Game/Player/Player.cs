@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private PlayerInputHandler _playerInputHandler;
     private SnakeBuilder _snakeBuilder;
     private SnakeSplitter _snakeSplitter;
+    private CollisionHandler _collisionHandler;
 
     public void Init(GameGrid gameGrid, GameManager gameManager)
     {
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
         _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
         _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
+        _collisionHandler = new CollisionHandler(this, _obstaclesLayerMask);
     }
 
     private void Start()
@@ -51,40 +53,22 @@ public class Player : MonoBehaviour
 
         _lastMovementTime = Time.time;
         _playerInputHandler.DirectionChanged = false;
-        HandleCollisionsInNextTile();
+
+        HandleCollisions();
         MoveToNextTile();
     }
 
-    private void HandleCollisionsInNextTile()
+    private void HandleCollisions()
     {
         Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
-
-
-        Vector2 rayCastDirection = nextTilePosition - _snakeBuilder.HeadPosition;
-        RaycastHit2D hit = Physics2D.Raycast(_snakeBuilder.HeadPosition, rayCastDirection, _gameGrid.TileSize);
-
-        if (hit)
-        {
-            HandleCollision(hit.collider.gameObject);
-        }
+        _collisionHandler.HandleCollisionsInNextTile(nextTilePosition, _snakeBuilder.HeadPosition, _gameGrid.TileSize);
     }
 
-    private void HandleCollision(GameObject hit)
-    {
-        if (((1 << hit.layer) & _obstaclesLayerMask) != 0)
-        {
-            HitObstacle(hit);
-        }
-        else if (hit.TryGetComponent(out Item item))
-        {
-            HitItem(item);
-        }
-    }
 
-    private void HitObstacle(GameObject hit)
+    public void HitObstacle(GameObject hit)
     {
-        //TODO: Refactor
-        if (hit.TryGetComponent(out SnakeSegment snakeSegment))
+        bool hitSnakeSegment = hit.TryGetComponent(out SnakeSegment snakeSegment);
+        if (hitSnakeSegment)
         {
             LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
             while (current != null)
@@ -101,6 +85,7 @@ public class Player : MonoBehaviour
 
         _gameManager.ResetGame();
     }
+
 
     public void HitItem(Item item)
     {
