@@ -78,7 +78,7 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void HandleCollision(GameObject hitObject)
     {
-        //Don't use a layer mask for this
+        //TODO: Don't use a layer mask for this
         if (((1 << hitObject.layer) & _obstaclesLayerMask) != 0)
         {
             HitObstacle(hitObject);

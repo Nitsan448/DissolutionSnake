@@ -1,7 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TilemapGridMarker : MonoBehaviour
+public class TilemapGridMarker : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private Tilemap _tilemap;
     private GameGrid _gameGrid;
@@ -13,11 +15,21 @@ public class TilemapGridMarker : MonoBehaviour
 
     private void Start()
     {
-        MarkAllTilesInGrid();
+        List<Vector2> tilePositionsInGrid = GetTilePositionsInGrid();
+        MarkTilesInGrid(tilePositionsInGrid);
+        DataPersistenceManager.Instance.Register(this);
     }
 
-    private void MarkAllTilesInGrid()
+    private void OnDestroy()
     {
+        DataPersistenceManager.Instance.Unregister(this);
+    }
+
+
+    private List<Vector2> GetTilePositionsInGrid()
+    {
+        List<Vector2> tilePositionsInGrid = new List<Vector2>();
+
         for (int column = _tilemap.cellBounds.xMin; column < _tilemap.cellBounds.xMax; column++)
         {
             for (int row = _tilemap.cellBounds.yMin; row < _tilemap.cellBounds.yMax; row++)
@@ -29,8 +41,28 @@ public class TilemapGridMarker : MonoBehaviour
 
                 Vector3 worldPosition = _tilemap.CellToWorld(cellPosition);
                 Vector2 tilePositionInGrid = _gameGrid.GetClosestTile(worldPosition);
-                _gameGrid.MarkTileAsOccupied(tilePositionInGrid, gameObject);
+                tilePositionsInGrid.Add(tilePositionInGrid);
             }
         }
+
+        return tilePositionsInGrid;
+    }
+
+    private void MarkTilesInGrid(List<Vector2> tilePositionsInGrid)
+    {
+        foreach (Vector2 tilePosition in tilePositionsInGrid)
+        {
+            _gameGrid.MarkTileAsOccupied(tilePosition, gameObject);
+        }
+    }
+
+    public void SaveData(GameData dataToSave)
+    {
+        dataToSave.TilePositions = GetTilePositionsInGrid();
+    }
+
+    public void LoadData(GameData loadedData)
+    {
+        MarkTilesInGrid(loadedData.TilePositions);
     }
 }
