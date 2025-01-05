@@ -15,6 +15,17 @@ public class GameGrid : MonoBehaviour
     public Vector2 GetNextTileInDirection(Vector2 positionInGrid, EDirection direction)
     {
         Vector2 newPositionInGrid = positionInGrid + direction.GetDirectionVector() * _tileSize;
+
+        if (newPositionInGrid.x < _collider.bounds.min.x)
+            newPositionInGrid.x = _collider.bounds.max.x;
+        else if (newPositionInGrid.x >= _collider.bounds.max.x + _tileSize)
+            newPositionInGrid.x = _collider.bounds.min.x;
+
+        if (newPositionInGrid.y < _collider.bounds.min.y)
+            newPositionInGrid.y = _collider.bounds.max.y;
+        else if (newPositionInGrid.y >= _collider.bounds.max.y + _tileSize)
+            newPositionInGrid.y = _collider.bounds.min.y;
+
         return newPositionInGrid;
     }
 

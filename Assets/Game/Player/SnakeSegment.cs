@@ -9,7 +9,6 @@ public class SnakeSegment : MonoBehaviour
     [SerializeField] private Sprite _segmentSprite;
     [SerializeField] private float _middleNodeAlpha = 0.5f;
     [SerializeField] private float _detachedSegmentAlpha = 0.8f;
-    [SerializeField] private BoxCollider2D _collider;
 
     public bool IsDetached { get; private set; } = false;
 
