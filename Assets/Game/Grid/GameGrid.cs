@@ -53,13 +53,22 @@ public class GameGrid : MonoBehaviour
 
     public void MarkTileAsOccupied(Vector2 tilePosition, GameObject occupier)
     {
-        Debug.Log(tilePosition);
         _occupiedTiles.TryAdd(tilePosition, occupier);
     }
 
     public void MarkTileAsUnOccupied(Vector2 tilePosition)
     {
         _occupiedTiles.Remove(tilePosition);
+    }
+
+    public bool IsPositionOccupied(Vector2 tilePosition)
+    {
+        return _occupiedTiles.ContainsKey(tilePosition);
+    }
+
+    public GameObject GetGameObjectAtOccupiedTile(Vector2 tilePosition)
+    {
+        return _occupiedTiles[tilePosition];
     }
 
     private void OnDrawGizmosSelected()

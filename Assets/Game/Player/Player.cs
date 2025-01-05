@@ -79,6 +79,7 @@ public class Player : MonoBehaviour, IDataPersistence
         bool hitSnakeSegment = hit.TryGetComponent(out SnakeSegment snakeSegment);
         if (hitSnakeSegment)
         {
+            if (snakeSegment.IsDetached) return;
             //Search for hit segment starting from middle node and ending at the tail
             LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
             while (current != null)

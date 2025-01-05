@@ -93,8 +93,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     public void DetachSegment(LinkedListNode<SnakeSegment> segmentNode)
     {
-        segmentNode.Value.DisableCollider();
-        segmentNode.Value.MakeMiddleNode();
+        segmentNode.Value.MakeDetachedNode();
         Snake.Remove(segmentNode);
     }
 

@@ -11,6 +11,8 @@ public class SnakeSegment : MonoBehaviour
     [SerializeField] private float _detachedSegmentAlpha = 0.8f;
     [SerializeField] private BoxCollider2D _collider;
 
+    public bool IsDetached { get; private set; } = false;
+
     public void MakeHead()
     {
         _spriteRenderer.sprite = _headSprite;
@@ -25,6 +27,7 @@ public class SnakeSegment : MonoBehaviour
     {
         _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, _detachedSegmentAlpha);
         _spriteRenderer.sortingOrder -= 10;
+        IsDetached = true;
     }
 
     public void MakeMiddleNode()
@@ -35,10 +38,5 @@ public class SnakeSegment : MonoBehaviour
     public void MakeNormalNode()
     {
         _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1);
-    }
-
-    public void DisableCollider()
-    {
-        _collider.enabled = false;
     }
 }

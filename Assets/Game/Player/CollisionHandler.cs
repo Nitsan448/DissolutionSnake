@@ -13,12 +13,17 @@ public class CollisionHandler
 
     public void HandleCollisionsInNextTile(Vector2 nextTilePosition, Vector2 snakeHeadPosition, float gridTileSize)
     {
-        Vector2 rayCastDirection = nextTilePosition - snakeHeadPosition;
-        RaycastHit2D hit = Physics2D.Raycast(snakeHeadPosition, rayCastDirection, gridTileSize);
-
-        if (hit)
+        // Vector2 rayCastDirection = nextTilePosition - snakeHeadPosition;
+        // RaycastHit2D hit = Physics2D.Raycast(snakeHeadPosition, rayCastDirection, gridTileSize);
+        //
+        // if (hit)
+        // {
+        //     HandleCollision(hit.collider.gameObject);
+        // }
+        if (Object.FindFirstObjectByType<GameGrid>().IsPositionOccupied(nextTilePosition))
         {
-            HandleCollision(hit.collider.gameObject);
+            GameObject gameObject = Object.FindFirstObjectByType<GameGrid>().GetGameObjectAtOccupiedTile(nextTilePosition);
+            HandleCollision(gameObject);
         }
     }
 
