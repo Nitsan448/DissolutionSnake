@@ -47,7 +47,7 @@ public class SnakeSplitter
         {
             float delayUntilNextSegmentIsDestroyed = _dissolutionStartingDelay * (1 - (currentSegmentIndex / numberOfSegmentsToDestroy));
             await UniTask.Delay(TimeSpan.FromSeconds(delayUntilNextSegmentIsDestroyed));
-            Object.Destroy(segment);
+            Object.Destroy(segment.gameObject);
             currentSegmentIndex++;
         }
     }
