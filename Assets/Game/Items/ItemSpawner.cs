@@ -19,6 +19,10 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     public void Init(GameGrid gameGrid)
     {
         _gameGrid = gameGrid;
+    }
+
+    private void Start()
+    {
         DataPersistenceManager.Instance.Register(this);
     }
 

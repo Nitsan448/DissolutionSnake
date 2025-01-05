@@ -15,6 +15,10 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
     public void Init(Player player)
     {
         _player = player;
+    }
+
+    private void Start()
+    {
         SetScore(0);
 
         if (_subscribedToItemEatenEvent) return;

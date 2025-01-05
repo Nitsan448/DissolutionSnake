@@ -28,10 +28,6 @@ public class Player : MonoBehaviour, IDataPersistence
     public void Init(GameGrid gameGrid)
     {
         _gameGrid = gameGrid;
-        _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
-        _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
-        _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
-        DataPersistenceManager.Instance.Register(this);
     }
 
     private void OnDestroy()
@@ -41,6 +37,10 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void Start()
     {
+        _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
+        _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
+        _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
+        DataPersistenceManager.Instance.Register(this);
         transform.position = _gameGrid.GetClosestTile(transform.position);
         _snakeBuilder.CreateNewSnake();
     }
