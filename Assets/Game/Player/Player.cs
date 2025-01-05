@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private float _snakeDissolutionStartingSpeed;
     [SerializeField] private AudioSource _deathAudioSource;
     [SerializeField] private AudioSource _eatItemAudioSource;
+    [SerializeField] private AudioSource _eatTailAudioSource;
 
     private GameGrid _gameGrid;
     private float _lastMovementTime;
@@ -101,6 +102,7 @@ public class Player : MonoBehaviour, IDataPersistence
             {
                 if (snakeSegment == current.Value)
                 {
+                    _eatTailAudioSource.Play();
                     _snakeSplitter.SplitSnake(current);
                     return;
                 }
