@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class SnakeSegment : MonoBehaviour
 {
+    [SerializeField] private SnakeSegmentData _snakeSegmentData;
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private Sprite _headSprite;
-    [SerializeField] private Sprite _segmentSprite;
-    [SerializeField] private float _middleNodeAlpha = 0.5f;
-    [SerializeField] private float _detachedSegmentAlpha = 0.8f;
     private GameGrid _gameGrid;
 
     public bool IsDetached { get; private set; } = false;
@@ -25,28 +22,28 @@ public class SnakeSegment : MonoBehaviour
 
     public void MakeHead()
     {
-        _spriteRenderer.sprite = _headSprite;
+        _spriteRenderer.sprite = _snakeSegmentData.HeadSprite;
     }
 
     public void MakeBody()
     {
-        _spriteRenderer.sprite = _segmentSprite;
+        _spriteRenderer.sprite = _snakeSegmentData.BodySprite;
     }
 
     public void MakeDetachedNode()
     {
-        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, _detachedSegmentAlpha);
+        _spriteRenderer.color = _spriteRenderer.color.GetWithNewAlpha(_snakeSegmentData.DetachedSegmentAlpha);
         _spriteRenderer.sortingOrder -= 10;
         IsDetached = true;
     }
 
     public void MakeMiddleNode()
     {
-        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, _middleNodeAlpha);
+        _spriteRenderer.color = _spriteRenderer.color.GetWithNewAlpha(_snakeSegmentData.MiddleNodeAlpha);
     }
 
     public void MakeNormalNode()
     {
-        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1);
+        _spriteRenderer.color = _spriteRenderer.color.GetWithNewAlpha(1);
     }
 }

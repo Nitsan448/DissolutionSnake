@@ -100,8 +100,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3363a46407888f746acefbb47ad4ee45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _snakeSegmentData: {fileID: 11400000, guid: 4ee703e644e4d5745939d23c117afaaf, type: 2}
   _spriteRenderer: {fileID: 8296892466763855067}
-  _headSprite: {fileID: -4913734232120889749, guid: 0c7829fa32b94c34fbac096f8f56396b, type: 3}
-  _segmentSprite: {fileID: 1132601440937267150, guid: 0c7829fa32b94c34fbac096f8f56396b, type: 3}
-  _middleNodeAlpha: 0.5
-  _detachedSegmentAlpha: 0.8
