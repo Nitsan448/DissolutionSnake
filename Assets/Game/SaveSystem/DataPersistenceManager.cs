@@ -27,7 +27,6 @@ public class DataPersistenceManager : ASingleton<DataPersistenceManager>
         _dataPersistenceObjects.Remove(dataPersistenceObject);
     }
 
-    [Button]
     public void SaveGame()
     {
         _gameData = new GameData();
@@ -40,7 +39,6 @@ public class DataPersistenceManager : ASingleton<DataPersistenceManager>
         _fileDataHandler.TrySavingData(_gameData);
     }
 
-    [Button]
     public void LoadGame()
     {
         _gameData = _fileDataHandler.TryLoadingData();
