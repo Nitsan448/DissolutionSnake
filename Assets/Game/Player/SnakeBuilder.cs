@@ -35,7 +35,6 @@ public class SnakeBuilder : IDataPersistence, IDisposable
     {
         Snake = new LinkedList<SnakeSegment>();
         AddFront(_playerTransform.position);
-        MiddleSegmentNode = Snake.First;
 
         for (int i = 1; i < _snakeStartingSize; i++)
         {
@@ -56,6 +55,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private void UpdateMiddleNode(bool moveForward)
     {
+        //TODO: refactor
         bool moveMiddleNode = moveForward ? Snake.Count % 2 == 0 : Snake.Count % 2 == 1;
         if (!moveMiddleNode) return;
         if (MiddleSegmentNode == null)

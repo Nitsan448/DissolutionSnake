@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 
 public class GameGrid : MonoBehaviour
 {
-    public float TileSize => _tileSize;
     private readonly Dictionary<Vector2, GameObject> _occupiedTiles = new();
 
     [SerializeField] private BoxCollider2D _collider;
@@ -15,28 +14,44 @@ public class GameGrid : MonoBehaviour
     public Vector2 GetNextTileInDirection(Vector2 positionInGrid, EDirection direction)
     {
         Vector2 newPositionInGrid = positionInGrid + direction.GetDirectionVector() * _tileSize;
-
-        if (newPositionInGrid.x < _collider.bounds.min.x)
-            newPositionInGrid.x = _collider.bounds.max.x;
-        else if (newPositionInGrid.x >= _collider.bounds.max.x + _tileSize)
-            newPositionInGrid.x = _collider.bounds.min.x;
-
-        if (newPositionInGrid.y < _collider.bounds.min.y)
-            newPositionInGrid.y = _collider.bounds.max.y;
-        else if (newPositionInGrid.y >= _collider.bounds.max.y + _tileSize)
-            newPositionInGrid.y = _collider.bounds.min.y;
-
+        newPositionInGrid = WrapPosition(newPositionInGrid);
         return newPositionInGrid;
     }
 
-    public Vector2 GetRandomUnoccupiedTile()
+    private Vector2 WrapPosition(Vector2 position)
     {
-        Vector2 tilePosition = GetRandomTile();
-        while (_occupiedTiles.ContainsKey(tilePosition))
+        if (position.x < _collider.bounds.min.x)
         {
-            tilePosition = GetRandomTile();
+            position.x = _collider.bounds.max.x;
+        }
+        else if (position.x >= _collider.bounds.max.x + _tileSize)
+        {
+            position.x = _collider.bounds.min.x;
         }
 
+        if (position.y < _collider.bounds.min.y)
+        {
+            position.y = _collider.bounds.max.y;
+        }
+        else if (position.y >= _collider.bounds.max.y + _tileSize)
+        {
+            position.y = _collider.bounds.min.y;
+        }
+
+        return position;
+    }
+
+    public Vector2 GetRandomUnoccupiedTile(int maxNumberOfIteration = 100)
+    {
+        Vector2 tilePosition = GetRandomTile();
+        int numberOfIterations = 0;
+        while (_occupiedTiles.ContainsKey(tilePosition) && numberOfIterations < maxNumberOfIteration)
+        {
+            tilePosition = GetRandomTile();
+            numberOfIterations++;
+        }
+
+        if (numberOfIterations == maxNumberOfIteration) Debug.LogWarning("No unoccupied tile found");
         return tilePosition;
     }
 

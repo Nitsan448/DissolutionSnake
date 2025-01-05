@@ -63,14 +63,30 @@ public class Player : MonoBehaviour, IDataPersistence
         _lastMovementTime = Time.time;
         _playerInputHandler.DirectionChanged = false;
 
-        HandleCollisions();
+        Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
+        HandleCollisionsInNextTile(nextTilePosition);
         MoveToNextTile();
     }
 
-    private void HandleCollisions()
+    private void HandleCollisionsInNextTile(Vector2 nextTilePosition)
     {
-        Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
-        _collisionHandler.HandleCollisionsInNextTile(nextTilePosition, _snakeBuilder.HeadPosition, _gameGrid.TileSize);
+        if (!_gameGrid.IsPositionOccupied(nextTilePosition)) return;
+
+        GameObject hitObject = _gameGrid.GetGameObjectAtOccupiedTile(nextTilePosition);
+        HandleCollision(hitObject);
+    }
+
+    private void HandleCollision(GameObject hitObject)
+    {
+        //Don't use a layer mask for this
+        if (((1 << hitObject.layer) & _obstaclesLayerMask) != 0)
+        {
+            HitObstacle(hitObject);
+        }
+        else if (hitObject.TryGetComponent(out Item item))
+        {
+            HitItem(item);
+        }
     }
 
 

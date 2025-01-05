@@ -3,6 +3,7 @@ using UnityEngine;
 public class CollisionHandler
 {
     private Player _player;
+    private GameGrid _gameGrid;
     private readonly LayerMask _obstaclesLayerMask;
 
     public CollisionHandler(Player player, LayerMask obstaclesLayerMask)
@@ -13,13 +14,6 @@ public class CollisionHandler
 
     public void HandleCollisionsInNextTile(Vector2 nextTilePosition, Vector2 snakeHeadPosition, float gridTileSize)
     {
-        // Vector2 rayCastDirection = nextTilePosition - snakeHeadPosition;
-        // RaycastHit2D hit = Physics2D.Raycast(snakeHeadPosition, rayCastDirection, gridTileSize);
-        //
-        // if (hit)
-        // {
-        //     HandleCollision(hit.collider.gameObject);
-        // }
         if (Object.FindFirstObjectByType<GameGrid>().IsPositionOccupied(nextTilePosition))
         {
             GameObject gameObject = Object.FindFirstObjectByType<GameGrid>().GetGameObjectAtOccupiedTile(nextTilePosition);

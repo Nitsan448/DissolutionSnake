@@ -9,7 +9,7 @@ public class GameManager : ASingleton<GameManager>
     [SerializeField] private Player _player;
     [SerializeField] private ItemSpawner _itemSpawner;
     [SerializeField] private ScoreBoard _scoreBoard;
-    [SerializeField] private TilePositionsGetter _tilePositionsGetter;
+    [SerializeField] private TilemapGridMarker _tilemapGridMarker;
     public EGameState GameState { get; private set; } = EGameState.Running;
 
     protected override void DoOnAwake()
@@ -17,7 +17,7 @@ public class GameManager : ASingleton<GameManager>
         _player.Init(_gameGrid, this);
         _itemSpawner.Init(_gameGrid, this);
         _scoreBoard.Init(_player);
-        _tilePositionsGetter.Init(_gameGrid);
+        _tilemapGridMarker.Init(_gameGrid);
     }
 
     public void ResetGame()
