@@ -29,6 +29,7 @@ public class SnakeSplitter
         {
             LinkedListNode<SnakeSegment> next = current.Next;
             detachedSection.AddLast(current.Value);
+            current.Value.MakeDetachedNode();
             _snakeBuilder.DetachSegment(current);
             current = next;
         }

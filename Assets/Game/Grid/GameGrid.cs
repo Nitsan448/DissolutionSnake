@@ -36,20 +36,24 @@ public class GameGrid : MonoBehaviour
         return GetClosestTile(randomPositionInGrid);
     }
 
-    public Vector2 GetClosestTile(Vector2 positionInGrid)
+    public Vector2 GetClosestTile(Vector2 position)
     {
-        //TODO: make this work with a position outside of the grid
         Vector2 gridStartTile = _collider.bounds.min;
 
-        float tileRowIndex = Mathf.Round((positionInGrid.x - gridStartTile.x) / _tileSize);
-        float tileColumnIndex = Mathf.Round((positionInGrid.y - gridStartTile.y) / _tileSize);
+        float tileRowIndex = Mathf.Floor((position.x - gridStartTile.x) / _tileSize);
+        float tileColumnIndex = Mathf.Floor((position.y - gridStartTile.y) / _tileSize);
 
-        Vector2 closestTile = new(gridStartTile.x + tileRowIndex * _tileSize, gridStartTile.y + tileColumnIndex * _tileSize);
+        Vector2 closestTile = new(
+            gridStartTile.x + (tileRowIndex + _tileSize) * _tileSize,
+            gridStartTile.y + (tileColumnIndex + _tileSize) * _tileSize
+        );
+
         return closestTile;
     }
 
     public void MarkTileAsOccupied(Vector2 tilePosition, GameObject occupier)
     {
+        Debug.Log(tilePosition);
         _occupiedTiles.TryAdd(tilePosition, occupier);
     }
 

@@ -7,35 +7,34 @@ public class SnakeSegment : MonoBehaviour
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Sprite _headSprite;
     [SerializeField] private Sprite _segmentSprite;
+    [SerializeField] private float _middleNodeAlpha = 0.5f;
+    [SerializeField] private float _detachedSegmentAlpha = 0.8f;
     [SerializeField] private BoxCollider2D _collider;
-
-    private int _startingSortOrder;
-
-    private void Start()
-    {
-        _startingSortOrder = _spriteRenderer.sortingOrder;
-    }
 
     public void MakeHead()
     {
         _spriteRenderer.sprite = _headSprite;
-        _spriteRenderer.sortingOrder = _startingSortOrder + 10;
     }
 
     public void MakeBody()
     {
         _spriteRenderer.sprite = _segmentSprite;
-        _spriteRenderer.sortingOrder = _startingSortOrder;
+    }
+
+    public void MakeDetachedNode()
+    {
+        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, _detachedSegmentAlpha);
+        _spriteRenderer.sortingOrder -= 10;
     }
 
     public void MakeMiddleNode()
     {
-        _spriteRenderer.color = new Color(1, 1, 1, 0.7f);
+        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, _middleNodeAlpha);
     }
 
     public void MakeNormalNode()
     {
-        _spriteRenderer.color = new Color(1, 1, 1, 1);
+        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1);
     }
 
     public void DisableCollider()

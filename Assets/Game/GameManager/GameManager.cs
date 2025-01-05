@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private ItemSpawner _itemSpawner;
     [SerializeField] private ScoreBoard _scoreBoard;
+    [SerializeField] private TilePositionsGetter _tilePositionsGetter;
     public EGameState GameState { get; private set; }
 
     private void Awake()
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
         _player.Init(_gameGrid, this);
         _itemSpawner.Init(_gameGrid, this);
         _scoreBoard.Init(_player);
+        _tilePositionsGetter.Init(_gameGrid);
         GameState = EGameState.Running;
     }
 

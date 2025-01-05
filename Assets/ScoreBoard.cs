@@ -19,6 +19,12 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
         if (_subscribedToItemEatenEvent) return;
         _subscribedToItemEatenEvent = true;
         _player.ItemEaten += UpdateScore;
+        DataPersistenceManager.Instance.Register(this);
+    }
+
+    private void OnDestroy()
+    {
+        DataPersistenceManager.Instance.Unregister(this);
     }
 
     private void SetScore(int score)

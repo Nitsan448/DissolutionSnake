@@ -96,7 +96,6 @@ public class Player : MonoBehaviour, IDataPersistence
         _gameManager.ResetGame();
     }
 
-
     public void HitItem(Item item)
     {
         ItemEaten?.Invoke(item.ItemScore);
