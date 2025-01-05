@@ -9,8 +9,19 @@ public class SnakeSegment : MonoBehaviour
     [SerializeField] private Sprite _segmentSprite;
     [SerializeField] private float _middleNodeAlpha = 0.5f;
     [SerializeField] private float _detachedSegmentAlpha = 0.8f;
+    private GameGrid _gameGrid;
 
     public bool IsDetached { get; private set; } = false;
+
+    public void Init(GameGrid gameGrid)
+    {
+        _gameGrid = gameGrid;
+    }
+
+    private void OnDestroy()
+    {
+        _gameGrid.MarkTileAsUnOccupied(transform.position);
+    }
 
     public void MakeHead()
     {

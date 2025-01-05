@@ -72,7 +72,9 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
     {
-        return Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
+        SnakeSegment snakeSegment = Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
+        snakeSegment.Init(_gameGrid);
+        return snakeSegment;
     }
 
     public void AddBack()
@@ -98,17 +100,11 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         Snake.Remove(segmentNode);
     }
 
-    public void DestroySegment(SnakeSegment segment)
-    {
-        _gameGrid.MarkTileAsUnOccupied(segment.transform.position);
-        Object.Destroy(segment.gameObject);
-    }
-
     public void RemoveBack()
     {
         SnakeSegment last = Snake.Last.Value;
         Snake.RemoveLast();
-        DestroySegment(last);
+        Object.Destroy(last.gameObject);
         UpdateMiddleNode(false);
     }
 

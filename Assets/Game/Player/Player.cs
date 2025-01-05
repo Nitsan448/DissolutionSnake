@@ -8,12 +8,10 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDataPersistence
 {
-    //TODO: rename
-    public Action<int> ItemEaten;
+    public Action<int> OnItemEaten;
 
     [SerializeField] private EDirection _startingMovementDirection = EDirection.Up;
     [SerializeField] private float _timeBetweenMovements;
-    [SerializeField] private LayerMask _obstaclesLayerMask;
     [SerializeField] private SnakeSegment _snakeSegmentPrefab;
     [SerializeField] private int _snakeStartingSize;
     [SerializeField] private float _snakeDissolutionStartingSpeed;
@@ -78,10 +76,13 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void HandleCollision(GameObject hitObject)
     {
-        //TODO: Don't use a layer mask for this
-        if (((1 << hitObject.layer) & _obstaclesLayerMask) != 0)
+        if (hitObject.TryGetComponent(out SnakeSegment snakeSegment))
         {
-            HitObstacle(hitObject);
+            HitSegment(snakeSegment);
+        }
+        else if (hitObject.TryGetComponent(out Walls walls))
+        {
+            Death();
         }
         else if (hitObject.TryGetComponent(out Item item))
         {
@@ -89,37 +90,35 @@ public class Player : MonoBehaviour, IDataPersistence
         }
     }
 
-
-    public void HitObstacle(GameObject hit)
+    private void HitSegment(SnakeSegment snakeSegment)
     {
-        bool hitSnakeSegment = hit.TryGetComponent(out SnakeSegment snakeSegment);
-        if (hitSnakeSegment)
+        if (snakeSegment.IsDetached) return;
+
+        //Search for hit segment starting from middle node and ending at the tail
+        LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
+        while (current != null)
         {
-            if (snakeSegment.IsDetached) return;
-            //Search for hit segment starting from middle node and ending at the tail
-            LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
-            while (current != null)
+            if (snakeSegment == current.Value)
             {
-                if (snakeSegment == current.Value)
-                {
-                    _eatTailAudioSource.Play();
-                    _snakeSplitter.SplitSnake(current);
-                    return;
-                }
-
-                current = current.Next;
+                _eatTailAudioSource.Play();
+                _snakeSplitter.SplitSnake(current);
+                return;
             }
-        }
 
+            current = current.Next;
+        }
+    }
+
+    private void Death()
+    {
         _deathAudioSource.Play();
         GameManager.Instance.ResetGame().Forget();
     }
 
-    public void HitItem(Item item)
+    private void HitItem(Item item)
     {
-        ItemEaten?.Invoke(item.ItemScore);
-        _gameGrid.MarkTileAsUnOccupied(item.transform.position);
-        item.DestroyItem();
+        OnItemEaten?.Invoke(item.ItemScore);
+        Destroy(item.gameObject);
         _snakeBuilder.AddBack();
         _eatItemAudioSource.Play();
     }

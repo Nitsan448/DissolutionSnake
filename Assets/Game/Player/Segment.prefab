@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8273295561014484639}
   - component: {fileID: 8296892466763855067}
   - component: {fileID: 2671592054587622877}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Segment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,4 +105,3 @@ MonoBehaviour:
   _segmentSprite: {fileID: 1132601440937267150, guid: 0c7829fa32b94c34fbac096f8f56396b, type: 3}
   _middleNodeAlpha: 0.5
   _detachedSegmentAlpha: 0.8
-  _segmentDestroyedAudioSource: {fileID: 0}

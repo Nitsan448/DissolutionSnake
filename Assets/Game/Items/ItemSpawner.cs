@@ -33,8 +33,6 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
         if (GameManager.Instance.GameState != EGameState.Running) return;
         _timeSinceLastItemSpawn += Time.deltaTime;
         if (_items.Count >= _maximumItems) return;
-        //TODO: decide where to put time since last item spawn update
-        // _timeSinceLastItemSpawn += Time.deltaTime;
 
         if (_timeSinceLastItemSpawn > _timeBetweenSpawns)
         {
@@ -52,7 +50,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     private void SpawnItemAtPosition(Vector2 position)
     {
         Item item = Instantiate(_itemPrefab, position, Quaternion.identity, transform);
-        item.Init(this);
+        item.Init(this, _gameGrid);
         _items.Add(item);
         _gameGrid.MarkTileAsOccupied(position, item.gameObject);
     }
@@ -86,7 +84,5 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
         {
             Destroy(item.gameObject);
         }
-
-        _items.Clear();
     }
 }

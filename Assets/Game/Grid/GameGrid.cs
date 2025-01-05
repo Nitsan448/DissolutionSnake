@@ -109,6 +109,7 @@ public class GameGrid : MonoBehaviour
 
     private void ShowGrid()
     {
+        if (_collider == null) return;
         //TODO: refactor
         Gizmos.color = Color.cyan;
         int numberOfRows = (int)(Mathf.Round(_collider.bounds.max.y - _collider.bounds.min.y) / _tileSize);

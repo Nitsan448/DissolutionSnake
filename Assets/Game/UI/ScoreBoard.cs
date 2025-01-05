@@ -19,7 +19,7 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
 
         if (_subscribedToItemEatenEvent) return;
         _subscribedToItemEatenEvent = true;
-        _player.ItemEaten += UpdateScore;
+        _player.OnItemEaten += UpdateScore;
         DataPersistenceManager.Instance.Register(this);
     }
 
@@ -39,12 +39,12 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
         if (_player == null || _subscribedToItemEatenEvent) return;
 
         _subscribedToItemEatenEvent = true;
-        _player.ItemEaten += UpdateScore;
+        _player.OnItemEaten += UpdateScore;
     }
 
     private void OnDisable()
     {
-        _player.ItemEaten -= UpdateScore;
+        _player.OnItemEaten -= UpdateScore;
         _subscribedToItemEatenEvent = false;
     }
 

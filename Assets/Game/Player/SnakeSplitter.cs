@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class SnakeSplitter
 {
@@ -46,7 +47,7 @@ public class SnakeSplitter
         {
             float delayUntilNextSegmentIsDestroyed = _dissolutionStartingDelay * (1 - (currentSegmentIndex / numberOfSegmentsToDestroy));
             await UniTask.Delay(TimeSpan.FromSeconds(delayUntilNextSegmentIsDestroyed));
-            _snakeBuilder.DestroySegment(segment);
+            Object.Destroy(segment);
             currentSegmentIndex++;
         }
     }
