@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,19 +12,21 @@ public class GameManager : ASingleton<GameManager>
     [SerializeField] private ScoreBoard _scoreBoard;
     [SerializeField] private TilemapGridMarker _tilemapGridMarker;
     [SerializeField] private UIManager _uiManager;
+    [SerializeField] private float _delayBetweenDeathAndRestart = 1;
     public EGameState GameState { get; private set; } = EGameState.Running;
 
     protected override void DoOnAwake()
     {
-        _player.Init(_gameGrid, this);
-        _itemSpawner.Init(_gameGrid, this);
+        _player.Init(_gameGrid);
+        _itemSpawner.Init(_gameGrid);
         _scoreBoard.Init(_player);
         _tilemapGridMarker.Init(_gameGrid);
     }
 
-    public void ResetGame()
+    public async UniTask ResetGame()
     {
         GameState = EGameState.Finished;
+        await UniTask.Delay(TimeSpan.FromSeconds(_delayBetweenDeathAndRestart));
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -46,13 +49,13 @@ public class GameManager : ASingleton<GameManager>
             ResumeGame();
         }
     }
-    
-    public void PauseGame()
+
+    private void PauseGame()
     {
         _uiManager.FadeInPausePanel();
         GameState = EGameState.Paused;
     }
-    
+
     public void ResumeGame()
     {
         _uiManager.FadeOutPausePanel();

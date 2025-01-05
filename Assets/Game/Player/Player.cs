@@ -17,23 +17,21 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private SnakeSegment _snakeSegmentPrefab;
     [SerializeField] private int _snakeStartingSize;
     [SerializeField] private float _snakeDissolutionStartingSpeed;
+    [SerializeField] private AudioSource _deathAudioSource;
+    [SerializeField] private AudioSource _eatItemAudioSource;
 
     private GameGrid _gameGrid;
-    private GameManager _gameManager;
     private float _lastMovementTime;
     private PlayerInputHandler _playerInputHandler;
     private SnakeBuilder _snakeBuilder;
     private SnakeSplitter _snakeSplitter;
-    private CollisionHandler _collisionHandler;
 
-    public void Init(GameGrid gameGrid, GameManager gameManager)
+    public void Init(GameGrid gameGrid)
     {
-        _gameManager = gameManager;
         _gameGrid = gameGrid;
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
         _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
         _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
-        _collisionHandler = new CollisionHandler(this, _obstaclesLayerMask);
         DataPersistenceManager.Instance.Register(this);
     }
 
@@ -50,12 +48,13 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void Update()
     {
+        if (GameManager.Instance.GameState != EGameState.Running) return;
         _playerInputHandler.HandleInput();
     }
 
     private void FixedUpdate()
     {
-        if (_gameManager.GameState != EGameState.Running) return;
+        if (GameManager.Instance.GameState != EGameState.Running) return;
 
         bool isReadyForNextMovement = _lastMovementTime + _timeBetweenMovements < Time.time;
         if (!isReadyForNextMovement && !_playerInputHandler.DirectionChanged) return;
@@ -110,7 +109,8 @@ public class Player : MonoBehaviour, IDataPersistence
             }
         }
 
-        _gameManager.ResetGame();
+        _deathAudioSource.Play();
+        GameManager.Instance.ResetGame().Forget();
     }
 
     public void HitItem(Item item)
@@ -119,6 +119,7 @@ public class Player : MonoBehaviour, IDataPersistence
         _gameGrid.MarkTileAsUnOccupied(item.transform.position);
         item.DestroyItem();
         _snakeBuilder.AddBack();
+        _eatItemAudioSource.Play();
     }
 
     private void MoveToNextTile()

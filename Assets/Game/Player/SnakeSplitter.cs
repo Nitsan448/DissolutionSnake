@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 public class SnakeSplitter
 {
@@ -43,9 +44,9 @@ public class SnakeSplitter
         int numberOfSegmentsToDestroy = splitSection.Count;
         foreach (SnakeSegment segment in splitSection)
         {
-            _snakeBuilder.DestroySegment(segment);
             float delayUntilNextSegmentIsDestroyed = _dissolutionStartingDelay * (1 - (currentSegmentIndex / numberOfSegmentsToDestroy));
             await UniTask.Delay(TimeSpan.FromSeconds(delayUntilNextSegmentIsDestroyed));
+            _snakeBuilder.DestroySegment(segment);
             currentSegmentIndex++;
         }
     }

@@ -17,6 +17,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
     private int _snakeStartingSize;
     public LinkedListNode<SnakeSegment> MiddleSegmentNode;
 
+
     public SnakeBuilder(GameGrid gameGrid, SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize)
     {
         _gameGrid = gameGrid;

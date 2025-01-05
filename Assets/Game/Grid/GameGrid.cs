@@ -97,6 +97,11 @@ public class GameGrid : MonoBehaviour
         return _occupiedTiles[tilePosition];
     }
 
+    public void ResetGrid()
+    {
+        _occupiedTiles.Clear();
+    }
+
     private void OnDrawGizmosSelected()
     {
         ShowGrid();

@@ -11,16 +11,14 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     [SerializeField] private Item _itemPrefab;
 
     private GameGrid _gameGrid;
-    private GameManager _gameManager;
     private float _timeSinceLastItemSpawn;
 
     //Use object pooling for items?
     private List<Item> _items = new(2);
 
-    public void Init(GameGrid gameGrid, GameManager gameManager)
+    public void Init(GameGrid gameGrid)
     {
         _gameGrid = gameGrid;
-        _gameManager = gameManager;
         DataPersistenceManager.Instance.Register(this);
     }
 
@@ -32,7 +30,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     private void Update()
     {
-        if (_gameManager.GameState != EGameState.Running) return;
+        if (GameManager.Instance.GameState != EGameState.Running) return;
         _timeSinceLastItemSpawn += Time.deltaTime;
         if (_items.Count >= _maximumItems) return;
         //TODO: decide where to put time since last item spawn update

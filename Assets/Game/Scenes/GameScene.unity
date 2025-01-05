@@ -4306,6 +4306,7 @@ MonoBehaviour:
   _scoreBoard: {fileID: 1788954549}
   _tilemapGridMarker: {fileID: 933991419}
   _uiManager: {fileID: 1601464018}
+  _delayBetweenDeathAndRestart: 1
 --- !u!1001 &2083764850494553341
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4359,16 +4360,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
-      propertyPath: _snakeStartingSize
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
-      propertyPath: _timeBetweenMovements
-      value: 0.08
-      objectReference: {fileID: 0}
-    - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _snakeDissolutionStartingSpeed
-      value: 0.1
+      value: 0.16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -105,4 +105,4 @@ MonoBehaviour:
   _segmentSprite: {fileID: 1132601440937267150, guid: 0c7829fa32b94c34fbac096f8f56396b, type: 3}
   _middleNodeAlpha: 0.5
   _detachedSegmentAlpha: 0.8
-  _collider: {fileID: 0}
+  _segmentDestroyedAudioSource: {fileID: 0}
