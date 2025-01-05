@@ -6,12 +6,11 @@ using UnityEngine;
 public class Timer : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private TextMeshPro _text;
-    private int _timeSinceGameStarted = 0;
+    private float _timeSinceGameStarted = 0;
 
     private void Start()
     {
         DataPersistenceManager.Instance.Register(this);
-        CountTime().Forget();
     }
 
     private void OnDestroy()
@@ -19,14 +18,17 @@ public class Timer : MonoBehaviour, IDataPersistence
         DataPersistenceManager.Instance.Unregister(this);
     }
 
-    private async UniTask CountTime()
+    private void Update()
     {
-        while (true)
-        {
-            _text.text = _timeSinceGameStarted.ToString();
-            await UniTask.Delay(TimeSpan.FromSeconds(1));
-            _timeSinceGameStarted += 1;
-        }
+        if (GameManager.Instance.GameState != EGameState.Running) return;
+
+        _timeSinceGameStarted += Time.deltaTime;
+        SetText();
+    }
+
+    private void SetText()
+    {
+        _text.text = Mathf.RoundToInt(_timeSinceGameStarted).ToString();
     }
 
     public void SaveData(GameData dataToSave)
@@ -37,6 +39,6 @@ public class Timer : MonoBehaviour, IDataPersistence
     public void LoadData(GameData loadedData)
     {
         _timeSinceGameStarted = loadedData.TimeSinceGameStarted;
-        _text.text = _timeSinceGameStarted.ToString();
+        SetText();
     }
 }

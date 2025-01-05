@@ -42,7 +42,7 @@ public class FileDataHandler
     private GameData LoadData(string fullPath)
     {
         string dataToLoad = "";
-        using (StreamReader reader = new StreamReader(fullPath))
+        using (StreamReader reader = new(fullPath))
         {
             dataToLoad = reader.ReadToEnd();
         }
@@ -69,7 +69,7 @@ public class FileDataHandler
 
         string dataToStore = JsonUtility.ToJson(data, true);
 
-        using (StreamWriter writer = new StreamWriter(fullPath))
+        using (StreamWriter writer = new(fullPath))
         {
             writer.Write(dataToStore);
         }

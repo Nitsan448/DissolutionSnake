@@ -12,7 +12,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     private GameGrid _gameGrid;
     private GameManager _gameManager;
-    private CancellationTokenSource _spawnItemsCts;
+    private float _timeSinceLastItemSpawn;
 
     //Use object pooling for items?
     private List<Item> _items = new(2);
@@ -24,27 +24,24 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
         DataPersistenceManager.Instance.Register(this);
     }
 
-    private void Start()
-    {
-        SpawnItems().Forget();
-    }
-
     private void OnDestroy()
     {
-        _spawnItemsCts?.Cancel();
         DataPersistenceManager.Instance.Unregister(this);
     }
 
-    private async UniTask SpawnItems()
+
+    private void Update()
     {
-        using (_spawnItemsCts = new CancellationTokenSource())
+        if (_gameManager.GameState != EGameState.Running) return;
+        _timeSinceLastItemSpawn += Time.deltaTime;
+        if (_items.Count >= _maximumItems) return;
+        //TODO: decide where to put time since last item spawn update
+        // _timeSinceLastItemSpawn += Time.deltaTime;
+
+        if (_timeSinceLastItemSpawn > _timeBetweenSpawns)
         {
-            while (!_spawnItemsCts.IsCancellationRequested)
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(_timeBetweenSpawns), cancellationToken: _spawnItemsCts.Token);
-                //TODO: make max items a serialized filled
-                if (_items.Count < _maximumItems && _gameManager.GameState == EGameState.Running) SpawnItem();
-            }
+            SpawnItem();
+            _timeSinceLastItemSpawn = 0;
         }
     }
 
@@ -77,16 +74,21 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData loadedData)
     {
+        DestroyAllItems();
+
+        foreach (Vector2 itemPosition in loadedData.ItemPositions)
+        {
+            SpawnItemAtPosition(itemPosition);
+        }
+    }
+
+    private void DestroyAllItems()
+    {
         foreach (Item item in _items)
         {
             Destroy(item.gameObject);
         }
 
         _items.Clear();
-
-        foreach (Vector2 itemPosition in loadedData.ItemPositions)
-        {
-            SpawnItemAtPosition(itemPosition);
-        }
     }
 }

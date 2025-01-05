@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3800bd4af8b344e94e8afbcd5b8394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeBetweenSpawns: 1.5
+  _timeBetweenSpawns: 2
   _maximumItems: 2
   _itemPrefab: {fileID: 4225752871676050805, guid: 2a21b218553199146a266125663df4da, type: 3}
 --- !u!1 &208742215

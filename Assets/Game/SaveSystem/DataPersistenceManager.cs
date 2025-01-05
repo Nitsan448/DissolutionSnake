@@ -5,27 +5,12 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class DataPersistenceManager : MonoBehaviour
+public class DataPersistenceManager : ASingleton<DataPersistenceManager>
 {
-    public static DataPersistenceManager Instance { get; private set; }
-
     [SerializeField] private string _saveFileName;
     private FileDataHandler _fileDataHandler;
-    private List<IDataPersistence> _dataPersistenceObjects = new();
+    private readonly List<IDataPersistence> _dataPersistenceObjects = new();
     private GameData _gameData;
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("Existing Data Persistence Manager found, destroying the new one");
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
 
     private void Start()
     {

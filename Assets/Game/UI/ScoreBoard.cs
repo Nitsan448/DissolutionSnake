@@ -16,6 +16,7 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
     {
         _player = player;
         SetScore(0);
+
         if (_subscribedToItemEatenEvent) return;
         _subscribedToItemEatenEvent = true;
         _player.ItemEaten += UpdateScore;
@@ -35,11 +36,10 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
 
     private void OnEnable()
     {
-        if (_player != null && !_subscribedToItemEatenEvent)
-        {
-            _subscribedToItemEatenEvent = true;
-            _player.ItemEaten += UpdateScore;
-        }
+        if (_player == null || _subscribedToItemEatenEvent) return;
+
+        _subscribedToItemEatenEvent = true;
+        _player.ItemEaten += UpdateScore;
     }
 
     private void OnDisable()
