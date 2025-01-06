@@ -2485,6 +2485,10 @@ PrefabInstance:
       propertyPath: _tilemapGridMarker
       value: 
       objectReference: {fileID: 933991419}
+    - target: {fileID: 6321011654567020950, guid: 8260593556da7f743b617883f47b0dbf, type: 3}
+      propertyPath: <GameGrid>k__BackingField
+      value: 
+      objectReference: {fileID: 238635885}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

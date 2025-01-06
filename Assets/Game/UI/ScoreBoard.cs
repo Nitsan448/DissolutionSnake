@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -9,9 +10,6 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
     private Player _player;
     private int _currentScore;
 
-    //TODO: refactor
-    private bool _subscribedToItemEatenEvent = false;
-
     public void Init(Player player)
     {
         _player = player;
@@ -20,10 +18,6 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
     private void Start()
     {
         SetScore(0);
-
-        if (_subscribedToItemEatenEvent) return;
-        _subscribedToItemEatenEvent = true;
-        _player.OnItemEaten += UpdateScore;
         DataPersistenceManager.Instance.Register(this);
     }
 
@@ -40,16 +34,19 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
 
     private void OnEnable()
     {
-        if (_player == null || _subscribedToItemEatenEvent) return;
+        // SubscribeToItemEatenEventAfterOneFrame().Forget();
+        _player.OnItemEaten += UpdateScore;
+    }
 
-        _subscribedToItemEatenEvent = true;
+    private async UniTask SubscribeToItemEatenEventAfterOneFrame()
+    {
+        await UniTask.Yield();
         _player.OnItemEaten += UpdateScore;
     }
 
     private void OnDisable()
     {
         _player.OnItemEaten -= UpdateScore;
-        _subscribedToItemEatenEvent = false;
     }
 
     private void UpdateScore(int scoreChange)

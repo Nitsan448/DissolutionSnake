@@ -69,17 +69,15 @@ public class GameGrid : MonoBehaviour
         float tileRowIndex = Mathf.Floor((position.x - gridStartTile.x) / _tileSize);
         float tileColumnIndex = Mathf.Floor((position.y - gridStartTile.y) / _tileSize);
 
-        Vector2 closestTile = new(
-            gridStartTile.x + (tileRowIndex + _tileSize) * _tileSize,
-            gridStartTile.y + (tileColumnIndex + _tileSize) * _tileSize
-        );
+        Vector2 closestTile = new(gridStartTile.x + (tileRowIndex + _tileSize) * _tileSize,
+            gridStartTile.y + (tileColumnIndex + _tileSize) * _tileSize);
 
         return closestTile;
     }
 
     public void MarkTileAsOccupied(Vector2 tilePosition, GameObject occupier)
     {
-        _occupiedTiles.TryAdd(tilePosition, occupier);
+        _occupiedTiles[tilePosition] = occupier;
     }
 
     public void MarkTileAsUnOccupied(Vector2 tilePosition)
@@ -95,11 +93,6 @@ public class GameGrid : MonoBehaviour
     public GameObject GetGameObjectAtOccupiedTile(Vector2 tilePosition)
     {
         return _occupiedTiles[tilePosition];
-    }
-
-    public void ResetGrid()
-    {
-        _occupiedTiles.Clear();
     }
 
     private void OnDrawGizmosSelected()

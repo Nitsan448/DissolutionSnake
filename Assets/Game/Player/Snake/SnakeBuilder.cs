@@ -151,7 +151,6 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private void CreateSnakeFromData(List<Vector2> snakeData)
     {
-        Snake.Clear();
         foreach (Vector2 snakeSegmentPosition in snakeData)
         {
             SnakeSegment createdSnakedSegment = CreateSnakeSegment(snakeSegmentPosition);

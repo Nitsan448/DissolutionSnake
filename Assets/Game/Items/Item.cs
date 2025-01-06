@@ -12,7 +12,7 @@ public class Item : MonoBehaviour
         _itemSpawner = itemSpawner;
     }
 
-    private void OnDestroy()
+    public void Remove()
     {
         _itemSpawner.RemoveItem(this);
     }

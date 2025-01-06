@@ -67,10 +67,9 @@ public class Player : MonoBehaviour, IDataPersistence
         GameObject hitObject = GameManager.Instance.GameGrid.GetGameObjectAtOccupiedTile(nextTilePosition);
 
         //Found last minute bugs and had to do this null check :(
-        if (hitObject != null)
-        {
-            HandleCollision(hitObject);
-        }
+        //Sometimes after loading a save file some of the items are marked as null in the grid
+        if (hitObject == null) return;
+        HandleCollision(hitObject);
     }
 
     private void HandleCollision(GameObject hitObject)
@@ -116,9 +115,8 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void HitItem(Item item)
     {
-        //When the item is destroyed it marks the tile as unoccupied.
         OnItemEaten?.Invoke(item.ItemScore);
-        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(item.transform.position);
+        item.Remove();
         Destroy(item.gameObject);
         _snakeBuilder.AddBack();
         _eatItemAudioSource.Play();

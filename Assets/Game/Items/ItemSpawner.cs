@@ -54,6 +54,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     public void RemoveItem(Item item)
     {
+        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(item.transform.position);
         _items.Remove(item);
     }
 
@@ -61,7 +62,6 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     {
         foreach (Item item in _items)
         {
-            Debug.Log(item.transform.position);
             dataToSave.ItemPositions.Add(item.transform.position);
         }
     }
@@ -72,17 +72,18 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
         foreach (Vector2 itemPosition in loadedData.ItemPositions)
         {
-            Debug.Log(itemPosition);
             SpawnItemAtPosition(itemPosition);
         }
     }
 
     private void DestroyAllItems()
     {
-        foreach (Item item in _items)
+        for (int i = _items.Count - 1; i >= 0; i--)
         {
-            // GameManager.Instance.GameGrid.MarkTileAsUnOccupied(item.transform.position);
-            Destroy(item.gameObject);
+            GameManager.Instance.GameGrid.MarkTileAsUnOccupied(_items[i].transform.position);
+            Destroy(_items[i].gameObject);
         }
+
+        _items.Clear();
     }
 }
