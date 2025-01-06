@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TilemapGridMarker : MonoBehaviour, IDataPersistence
+public class TilemapGridMarker : MonoBehaviour
 {
     [SerializeField] private Tilemap _tilemap;
 
@@ -11,12 +11,6 @@ public class TilemapGridMarker : MonoBehaviour, IDataPersistence
     {
         List<Vector2> tilePositionsInGrid = GetTilePositionsInGrid();
         MarkTilesInGrid(tilePositionsInGrid);
-        DataPersistenceManager.Instance.Register(this);
-    }
-
-    private void OnDestroy()
-    {
-        DataPersistenceManager.Instance.Unregister(this);
     }
 
 
@@ -48,15 +42,5 @@ public class TilemapGridMarker : MonoBehaviour, IDataPersistence
         {
             GameManager.Instance.GameGrid.MarkTileAsOccupied(tilePosition, gameObject);
         }
-    }
-
-    public void SaveData(GameData dataToSave)
-    {
-        dataToSave.TilePositions = GetTilePositionsInGrid();
-    }
-
-    public void LoadData(GameData loadedData)
-    {
-        MarkTilesInGrid(loadedData.TilePositions);
     }
 }
