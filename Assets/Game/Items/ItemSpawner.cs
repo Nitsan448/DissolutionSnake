@@ -10,16 +10,10 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     [SerializeField] private int _maximumItems = 2;
     [SerializeField] private Item _itemPrefab;
 
-    private GameGrid _gameGrid;
     private float _timeSinceLastItemSpawn;
 
     //Use object pooling for items?
     private List<Item> _items = new(2);
-
-    public void Init(GameGrid gameGrid)
-    {
-        _gameGrid = gameGrid;
-    }
 
     private void Start()
     {
@@ -47,16 +41,16 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     private void SpawnItem()
     {
-        Vector2 itemPosition = _gameGrid.GetRandomUnoccupiedTile();
+        Vector2 itemPosition = GameManager.Instance.GameGrid.GetRandomUnoccupiedTile();
         SpawnItemAtPosition(itemPosition);
     }
 
     private void SpawnItemAtPosition(Vector2 position)
     {
         Item item = Instantiate(_itemPrefab, position, Quaternion.identity, transform);
-        item.Init(this, _gameGrid);
+        item.Init(this);
         _items.Add(item);
-        _gameGrid.MarkTileAsOccupied(position, item.gameObject);
+        GameManager.Instance.GameGrid.MarkTileAsOccupied(position, item.gameObject);
     }
 
     public void RemoveItem(Item item)

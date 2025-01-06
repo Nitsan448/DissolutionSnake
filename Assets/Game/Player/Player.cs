@@ -18,17 +18,10 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private AudioSource _deathAudioSource;
     [SerializeField] private AudioSource _eatItemAudioSource;
     [SerializeField] private AudioSource _eatTailAudioSource;
-
-    private GameGrid _gameGrid;
     private float _lastMovementTime;
     private PlayerInputHandler _playerInputHandler;
     private SnakeBuilder _snakeBuilder;
     private SnakeSplitter _snakeSplitter;
-
-    public void Init(GameGrid gameGrid)
-    {
-        _gameGrid = gameGrid;
-    }
 
     private void OnDestroy()
     {
@@ -38,10 +31,10 @@ public class Player : MonoBehaviour, IDataPersistence
     private void Start()
     {
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
-        _snakeBuilder = new SnakeBuilder(_gameGrid, _snakeSegmentPrefab, transform, _snakeStartingSize);
+        _snakeBuilder = new SnakeBuilder(_snakeSegmentPrefab, transform, _snakeStartingSize);
         _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
         DataPersistenceManager.Instance.Register(this);
-        transform.position = _gameGrid.GetClosestTile(transform.position);
+        transform.position = GameManager.Instance.GameGrid.GetClosestTile(transform.position);
         _snakeBuilder.CreateNewSnake();
     }
 
@@ -61,16 +54,17 @@ public class Player : MonoBehaviour, IDataPersistence
         _lastMovementTime = Time.time;
         _playerInputHandler.DirectionChanged = false;
 
-        Vector2 nextTilePosition = _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
+        Vector2 nextTilePosition =
+            GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
         HandleCollisionsInNextTile(nextTilePosition);
         MoveToNextTile();
     }
 
     private void HandleCollisionsInNextTile(Vector2 nextTilePosition)
     {
-        if (!_gameGrid.IsPositionOccupied(nextTilePosition)) return;
+        if (!GameManager.Instance.GameGrid.IsPositionOccupied(nextTilePosition)) return;
 
-        GameObject hitObject = _gameGrid.GetGameObjectAtOccupiedTile(nextTilePosition);
+        GameObject hitObject = GameManager.Instance.GameGrid.GetGameObjectAtOccupiedTile(nextTilePosition);
         HandleCollision(hitObject);
     }
 
@@ -117,6 +111,7 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void HitItem(Item item)
     {
+        //When the item is destroyed it maks the tile as unoccupied.
         OnItemEaten?.Invoke(item.ItemScore);
         Destroy(item.gameObject);
         _snakeBuilder.AddBack();
@@ -127,7 +122,7 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         _snakeBuilder.Snake.First.Value.MakeBody();
         Vector2 newFrontPosition =
-            _gameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
+            GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
         _snakeBuilder.AddFront(newFrontPosition);
         _snakeBuilder.RemoveBack();
     }

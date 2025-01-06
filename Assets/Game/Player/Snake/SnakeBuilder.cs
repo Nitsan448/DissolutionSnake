@@ -5,22 +5,19 @@ using Object = UnityEngine.Object;
 
 public class SnakeBuilder : IDataPersistence, IDisposable
 {
-    //TODO: Use object pooling for the snake sections
     //TODO: refactor
 
     public LinkedList<SnakeSegment> Snake { get; private set; }
     public Vector2 HeadPosition => Snake.First.Value.transform.position;
 
-    private GameGrid _gameGrid;
     private SnakeSegment _snakeSegmentPrefab;
     private Transform _playerTransform;
     private int _snakeStartingSize;
     public LinkedListNode<SnakeSegment> MiddleSegmentNode;
 
 
-    public SnakeBuilder(GameGrid gameGrid, SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize)
+    public SnakeBuilder(SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize)
     {
-        _gameGrid = gameGrid;
         _snakeSegmentPrefab = snakeSegmentPrefab;
         _playerTransform = playerTransform;
         _snakeStartingSize = snakeStartingSize;
@@ -49,7 +46,6 @@ public class SnakeBuilder : IDataPersistence, IDisposable
     {
         Snake.AddFirst(CreateSnakeSegment(frontPosition));
         Snake.First.Value.MakeHead();
-        _gameGrid.MarkTileAsOccupied(frontPosition, Snake.First.Value.gameObject);
 
         UpdateMiddleNode(false);
     }
@@ -72,12 +68,20 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
     {
-        SnakeSegment snakeSegment = Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
-        snakeSegment.Init(_gameGrid);
-        return snakeSegment;
+        return Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
     }
 
     public void AddBack()
+    {
+        Vector2 newSegmentPosition = GetNewBackPosition();
+
+        SnakeSegment newSegment = CreateSnakeSegment(newSegmentPosition);
+        Snake.AddLast(newSegment);
+
+        UpdateMiddleNode(true);
+    }
+
+    private Vector2 GetNewBackPosition()
     {
         SnakeSegment lastSegment = Snake.Last.Value;
         LinkedListNode<SnakeSegment> secondToLastSegment = Snake.Last.Previous;
@@ -86,12 +90,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
             ? EDirection.Down
             : EDirectionExtensions.GetDirectionFromVector(lastSegment.transform.position - secondToLastSegment.Value.transform.position);
 
-        Vector2 newSegmentPosition = _gameGrid.GetNextTileInDirection(lastSegment.transform.position, direction);
-
-        SnakeSegment newSegment = CreateSnakeSegment(newSegmentPosition);
-        Snake.AddLast(newSegment);
-
-        UpdateMiddleNode(true);
+        return GameManager.Instance.GameGrid.GetNextTileInDirection(lastSegment.transform.position, direction);
     }
 
     public void DetachSegment(LinkedListNode<SnakeSegment> segmentNode)
@@ -151,7 +150,8 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         Snake.Clear();
         foreach (Vector2 snakeSegmentPosition in snakeData)
         {
-            Snake.AddLast(CreateSnakeSegment(snakeSegmentPosition));
+            SnakeSegment createdSnakedSegment = CreateSnakeSegment(snakeSegmentPosition);
+            Snake.AddLast(createdSnakedSegment);
         }
 
         Snake.First.Value.MakeHead();

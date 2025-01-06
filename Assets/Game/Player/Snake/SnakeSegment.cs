@@ -2,23 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeSegment : MonoBehaviour
+public class SnakeSegment : AGridTile
 {
     [SerializeField] private SnakeSegmentData _snakeSegmentData;
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    private GameGrid _gameGrid;
-
     public bool IsDetached { get; private set; } = false;
-
-    public void Init(GameGrid gameGrid)
-    {
-        _gameGrid = gameGrid;
-    }
-
-    private void OnDestroy()
-    {
-        _gameGrid.MarkTileAsUnOccupied(transform.position);
-    }
 
     public void MakeHead()
     {
@@ -35,6 +23,7 @@ public class SnakeSegment : MonoBehaviour
         _spriteRenderer.color = _spriteRenderer.color.GetWithNewAlpha(_snakeSegmentData.DetachedSegmentAlpha);
         _spriteRenderer.sortingOrder -= 10;
         IsDetached = true;
+        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(transform.position);
     }
 
     public void MakeMiddleNode()
