@@ -71,10 +71,10 @@ public class Player : MonoBehaviour, IDataPersistence
         // and then loaded while those items are still there.
         if (hitObject == null) return;
 
-        HandleCollision(hitObject);
+        ResolveCollision(hitObject);
     }
 
-    private void HandleCollision(GameObject hitObject)
+    private void ResolveCollision(GameObject hitObject)
     {
         if (hitObject.TryGetComponent(out SnakeSegment snakeSegment))
         {
@@ -94,9 +94,9 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         if (snakeSegment.IsDetached) return;
 
-        //Search for hit segment starting from middle node and ending at the tail
-
         LinkedListNode<SnakeSegment> current = _snakeController.MiddleSegmentNode;
+
+        //Search for hit segment starting from middle node and ending at the tail
         while (current != null)
         {
             if (snakeSegment == current.Value)

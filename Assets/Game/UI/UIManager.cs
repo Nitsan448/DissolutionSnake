@@ -1,16 +1,18 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup _pausePanelCanvasGroup;
+    [SerializeField] private GameObject _pausePanel;
 
     public void FadeInPausePanel()
     {
-        _pausePanelCanvasGroup.gameObject.SetActive(true);
+        _pausePanel.gameObject.SetActive(true);
     }
 
     public void FadeOutPausePanel()
     {
-        _pausePanelCanvasGroup.gameObject.SetActive(false);
+        _pausePanel.gameObject.SetActive(false);
     }
 }

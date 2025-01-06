@@ -12,7 +12,6 @@ public class PlayerInputHandler
 
     public void HandleInput()
     {
-        //TODO: refactor
         EDirection previousDirection = MovementDirection;
 
         if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && MovementDirection != EDirection.Left)

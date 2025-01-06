@@ -375,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e90bffd4ea600479601ab77a61dd84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pausePanelCanvasGroup: {fileID: 842566767}
+  _pausePanel: {fileID: 842566767}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,9 +704,9 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 526025212963094676, guid: 85ecbfc3e72041745bc56cd3f84efc94, type: 3}
   m_PrefabInstance: {fileID: 842566765}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &842566767 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 8202569756395448645, guid: 85ecbfc3e72041745bc56cd3f84efc94, type: 3}
+--- !u!1 &842566767 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4527455991912400265, guid: 85ecbfc3e72041745bc56cd3f84efc94, type: 3}
   m_PrefabInstance: {fileID: 842566765}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &933991410
