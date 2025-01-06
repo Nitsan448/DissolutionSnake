@@ -65,7 +65,12 @@ public class Player : MonoBehaviour, IDataPersistence
         if (!GameManager.Instance.GameGrid.IsPositionOccupied(nextTilePosition)) return;
 
         GameObject hitObject = GameManager.Instance.GameGrid.GetGameObjectAtOccupiedTile(nextTilePosition);
-        HandleCollision(hitObject);
+
+        //Found last minute bugs and had to do this null check :(
+        if (hitObject != null)
+        {
+            HandleCollision(hitObject);
+        }
     }
 
     private void HandleCollision(GameObject hitObject)
@@ -111,8 +116,9 @@ public class Player : MonoBehaviour, IDataPersistence
 
     private void HitItem(Item item)
     {
-        //When the item is destroyed it maks the tile as unoccupied.
+        //When the item is destroyed it marks the tile as unoccupied.
         OnItemEaten?.Invoke(item.ItemScore);
+        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(item.transform.position);
         Destroy(item.gameObject);
         _snakeBuilder.AddBack();
         _eatItemAudioSource.Play();

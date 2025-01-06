@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeSegment : AGridTile
+public class SnakeSegment : MonoBehaviour
 {
     [SerializeField] private SnakeSegmentData _snakeSegmentData;
     [SerializeField] private SpriteRenderer _spriteRenderer;

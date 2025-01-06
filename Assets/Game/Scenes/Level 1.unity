@@ -2008,7 +2008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: _timeBetweenMovements
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2090,11 +2090,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1772126996156299192, guid: dd45d6c9687fc80489486451094cc083, type: 3}
       propertyPath: _maximumItems
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1772126996156299192, guid: dd45d6c9687fc80489486451094cc083, type: 3}
       propertyPath: _timeBetweenSpawns
-      value: 0.2
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8837268265371764264, guid: dd45d6c9687fc80489486451094cc083, type: 3}
       propertyPath: m_LocalPosition.x

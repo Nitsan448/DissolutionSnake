@@ -44,8 +44,10 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     public void AddFront(Vector2 frontPosition)
     {
-        Snake.AddFirst(CreateSnakeSegment(frontPosition));
+        SnakeSegment snakeSegment = CreateSnakeSegment(frontPosition);
+        Snake.AddFirst(snakeSegment);
         Snake.First.Value.MakeHead();
+        GameManager.Instance.GameGrid.MarkTileAsOccupied(frontPosition, snakeSegment.gameObject);
 
         UpdateMiddleNode(false);
     }
@@ -77,6 +79,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
         SnakeSegment newSegment = CreateSnakeSegment(newSegmentPosition);
         Snake.AddLast(newSegment);
+        GameManager.Instance.GameGrid.MarkTileAsOccupied(newSegmentPosition, newSegment.gameObject);
 
         UpdateMiddleNode(true);
     }
@@ -103,6 +106,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
     {
         SnakeSegment last = Snake.Last.Value;
         Snake.RemoveLast();
+        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(last.transform.position);
         Object.Destroy(last.gameObject);
         UpdateMiddleNode(false);
     }
@@ -152,6 +156,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         {
             SnakeSegment createdSnakedSegment = CreateSnakeSegment(snakeSegmentPosition);
             Snake.AddLast(createdSnakedSegment);
+            GameManager.Instance.GameGrid.MarkTileAsOccupied(snakeSegmentPosition, createdSnakedSegment.gameObject);
         }
 
         Snake.First.Value.MakeHead();

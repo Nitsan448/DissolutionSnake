@@ -7,13 +7,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : ASingleton<GameManager>
 {
     [SerializeField] private Player _player;
-    [SerializeField] private ItemSpawner _itemSpawner;
     [SerializeField] private ScoreBoard _scoreBoard;
-    [SerializeField] private TilemapGridMarker _tilemapGridMarker;
     [SerializeField] private UIManager _uiManager;
-    [SerializeField] private float _delayBetweenDeathAndRestart = 1;
     [field: SerializeField] public GameGrid GameGrid { get; private set; }
     public EGameState GameState { get; private set; } = EGameState.Running;
+
+    [SerializeField] private float _delayBetweenDeathAndRestart = 1;
 
     protected override void DoOnAwake()
     {

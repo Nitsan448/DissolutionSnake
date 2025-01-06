@@ -12,8 +12,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     private float _timeSinceLastItemSpawn;
 
-    //Use object pooling for items?
-    private List<Item> _items = new(2);
+    private readonly List<Item> _items = new(2);
 
     private void Start()
     {
@@ -49,8 +48,8 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     {
         Item item = Instantiate(_itemPrefab, position, Quaternion.identity, transform);
         item.Init(this);
-        _items.Add(item);
         GameManager.Instance.GameGrid.MarkTileAsOccupied(position, item.gameObject);
+        _items.Add(item);
     }
 
     public void RemoveItem(Item item)
@@ -62,6 +61,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     {
         foreach (Item item in _items)
         {
+            Debug.Log(item.transform.position);
             dataToSave.ItemPositions.Add(item.transform.position);
         }
     }
@@ -72,6 +72,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
         foreach (Vector2 itemPosition in loadedData.ItemPositions)
         {
+            Debug.Log(itemPosition);
             SpawnItemAtPosition(itemPosition);
         }
     }
@@ -80,6 +81,7 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
     {
         foreach (Item item in _items)
         {
+            // GameManager.Instance.GameGrid.MarkTileAsUnOccupied(item.transform.position);
             Destroy(item.gameObject);
         }
     }

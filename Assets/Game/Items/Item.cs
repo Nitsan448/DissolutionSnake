@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Item : AGridTile
+public class Item : MonoBehaviour
 {
     [field: SerializeField] public int ItemScore { get; private set; } = 10;
 
