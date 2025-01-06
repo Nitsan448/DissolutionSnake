@@ -84,9 +84,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 526025212963094676}
-  - component: {fileID: 8202569756395448645}
   m_Layer: 5
-  m_Name: PausePanel
+  m_Name: PauseScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,18 +113,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &8202569756395448645
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4527455991912400265}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &6293292274333090870
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +124,7 @@ GameObject:
   - component: {fileID: 6688084225206530191}
   - component: {fileID: 1367110820656297553}
   m_Layer: 5
-  m_Name: PausePanelButtons
+  m_Name: PausePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -204,7 +191,7 @@ GameObject:
   - component: {fileID: 4726727460577342025}
   - component: {fileID: 4248558051495033341}
   m_Layer: 5
-  m_Name: LevelSelectButtons
+  m_Name: LevelSelectPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -743,7 +730,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1711849440659560625, guid: 406304416b62bfe44acc01dbbd539a79, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1368346035941535628}
+      addedObject: {fileID: 5051607929562277217}
   m_SourcePrefab: {fileID: 100100000, guid: 406304416b62bfe44acc01dbbd539a79, type: 3}
 --- !u!224 &3219999934368912488 stripped
 RectTransform:
@@ -755,7 +742,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1711849440659560625, guid: 406304416b62bfe44acc01dbbd539a79, type: 3}
   m_PrefabInstance: {fileID: 4063750521913956767}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1368346035941535628
+--- !u!114 &5051607929562277217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -764,10 +751,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3433117781007761710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02690107f5c06c2439b764e4625232b5, type: 3}
+  m_Script: {fileID: 11500000, guid: 03706072228431144b7eabe4602489f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pausePanelButtonsParent: {fileID: 6293292274333090870}
+  _panelToDisable: {fileID: 6918454609044799601}
+  _panelToEnable: {fileID: 6293292274333090870}
   _button: {fileID: 4272419779892686118}
 --- !u!114 &4272419779892686118 stripped
 MonoBehaviour:
@@ -1165,7 +1153,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1711849440659560625, guid: 406304416b62bfe44acc01dbbd539a79, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4263782164701423874}
+      addedObject: {fileID: 8790180578260219307}
   m_SourcePrefab: {fileID: 100100000, guid: 406304416b62bfe44acc01dbbd539a79, type: 3}
 --- !u!224 &5234238370750445759 stripped
 RectTransform:
@@ -1177,7 +1165,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1711849440659560625, guid: 406304416b62bfe44acc01dbbd539a79, type: 3}
   m_PrefabInstance: {fileID: 6658901215443088712}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4263782164701423874
+--- !u!114 &8790180578260219307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1186,10 +1174,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5451781755198516729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdbbb7b8d0073ee40a206f7b79ae2956, type: 3}
+  m_Script: {fileID: 11500000, guid: 03706072228431144b7eabe4602489f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelSelectButtonsParent: {fileID: 6918454609044799601}
+  _panelToDisable: {fileID: 6293292274333090870}
+  _panelToEnable: {fileID: 6918454609044799601}
   _button: {fileID: 6865407601828463089}
 --- !u!114 &6865407601828463089 stripped
 MonoBehaviour:

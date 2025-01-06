@@ -13,7 +13,6 @@ public class GameManager : ASingleton<GameManager>
     [field: SerializeField] public GameGrid GameGrid { get; private set; }
     public EGameState GameState { get; private set; } = EGameState.Running;
 
-
     protected override void DoOnAwake()
     {
         _scoreBoard.Init(_player);
@@ -40,7 +39,7 @@ public class GameManager : ASingleton<GameManager>
         {
             PauseGame();
         }
-        else
+        else if (GameState == EGameState.Paused)
         {
             ResumeGame();
         }
