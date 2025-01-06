@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDataPersistence
 {
@@ -18,6 +15,7 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private AudioSource _deathAudioSource;
     [SerializeField] private AudioSource _eatItemAudioSource;
     [SerializeField] private AudioSource _eatTailAudioSource;
+
     private float _lastMovementTime;
     private PlayerInputHandler _playerInputHandler;
     private SnakeController _snakeController;
@@ -35,7 +33,7 @@ public class Player : MonoBehaviour, IDataPersistence
         _snakeSplitter = new SnakeSplitter(_snakeController, _snakeDissolutionStartingSpeed);
         DataPersistenceManager.Instance.Register(this);
         transform.position = GameManager.Instance.GameGrid.GetClosestTile(transform.position);
-        _snakeController.CreateNewSnake();
+        _snakeController.CreateSnake();
     }
 
     private void Update()
@@ -78,7 +76,7 @@ public class Player : MonoBehaviour, IDataPersistence
     {
         if (hitObject.TryGetComponent(out SnakeSegment snakeSegment))
         {
-            HitSegment(snakeSegment);
+            HandleSnakeSegmentCollision(snakeSegment);
         }
         else if (hitObject.TryGetComponent(out Walls walls))
         {
@@ -86,11 +84,11 @@ public class Player : MonoBehaviour, IDataPersistence
         }
         else if (hitObject.TryGetComponent(out Item item))
         {
-            HitItem(item);
+            EatItem(item);
         }
     }
 
-    private void HitSegment(SnakeSegment snakeSegment)
+    private void HandleSnakeSegmentCollision(SnakeSegment snakeSegment)
     {
         if (snakeSegment.IsDetached) return;
 
@@ -118,12 +116,12 @@ public class Player : MonoBehaviour, IDataPersistence
         GameManager.Instance.ResetGame().Forget();
     }
 
-    private void HitItem(Item item)
+    private void EatItem(Item item)
     {
         OnItemEaten?.Invoke(item.ItemScore);
         item.Remove();
         Destroy(item.gameObject);
-        _snakeController.AddBack();
+        _snakeController.AddBackSegment();
         _eatItemAudioSource.Play();
     }
 
@@ -132,8 +130,8 @@ public class Player : MonoBehaviour, IDataPersistence
         _snakeController.Snake.First.Value.MakeBody();
         Vector2 newFrontPosition =
             GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeController.HeadPosition, _playerInputHandler.MovementDirection);
-        _snakeController.AddFront(newFrontPosition);
-        _snakeController.RemoveBack();
+        _snakeController.AddFrontSegment(newFrontPosition);
+        _snakeController.RemoveBackSegment();
     }
 
     public void SaveData(GameData dataToSave)

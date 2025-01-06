@@ -98,12 +98,12 @@ public class GameGrid : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         ShowGrid();
+        ShowOccupiedTiles();
     }
 
     private void ShowGrid()
     {
         if (_collider == null) return;
-        //TODO: refactor
         Gizmos.color = Color.cyan;
         int numberOfRows = (int)(Mathf.Round(_collider.bounds.max.y - _collider.bounds.min.y) / _tileSize);
         int numberOfColumns = (int)(Mathf.Round(_collider.bounds.max.x - _collider.bounds.min.x) / _tileSize);
@@ -122,7 +122,10 @@ public class GameGrid : MonoBehaviour
             Vector2 lineEnd = new(rowXPosition, _collider.bounds.max.y);
             Gizmos.DrawLine(lineStart, lineEnd);
         }
+    }
 
+    private void ShowOccupiedTiles()
+    {
         Gizmos.color = Color.red;
         foreach (Vector2 occupiedTilePosition in _occupiedTiles.Keys)
         {

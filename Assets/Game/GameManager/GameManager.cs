@@ -9,10 +9,10 @@ public class GameManager : ASingleton<GameManager>
     [SerializeField] private Player _player;
     [SerializeField] private ScoreBoard _scoreBoard;
     [SerializeField] private UIManager _uiManager;
+    [SerializeField] private float _delayBetweenDeathAndRestart = 1;
     [field: SerializeField] public GameGrid GameGrid { get; private set; }
     public EGameState GameState { get; private set; } = EGameState.Running;
 
-    [SerializeField] private float _delayBetweenDeathAndRestart = 1;
 
     protected override void DoOnAwake()
     {

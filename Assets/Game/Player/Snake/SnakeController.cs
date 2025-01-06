@@ -29,26 +29,34 @@ public class SnakeController : IDataPersistence, IDisposable
         DataPersistenceManager.Instance.Unregister(this);
     }
 
-    public void CreateNewSnake()
+    public void CreateSnake()
     {
         Snake = new LinkedList<SnakeSegment>();
-        AddFront(_playerTransform.position);
+        AddFrontSegment(_playerTransform.position);
 
         for (int i = 1; i < _snakeStartingSize; i++)
         {
-            AddBack();
+            AddBackSegment();
         }
 
         SetNewMiddleNode();
     }
 
-    public void AddFront(Vector2 frontPosition)
+    public void AddFrontSegment(Vector2 frontPosition)
     {
         SnakeSegment snakeSegment = CreateSnakeSegment(frontPosition);
         Snake.AddFirst(snakeSegment);
         Snake.First.Value.MakeHead();
 
         UpdateMiddleNode(false);
+    }
+
+    private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
+    {
+        SnakeSegment createdSnakeSegment =
+            Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
+        GameManager.Instance.GameGrid.MarkTileAsOccupied(segmentPosition, createdSnakeSegment.gameObject);
+        return createdSnakeSegment;
     }
 
     private void UpdateMiddleNode(bool moveForward)
@@ -66,15 +74,7 @@ public class SnakeController : IDataPersistence, IDisposable
         MiddleSegmentNode?.Value.MakeMiddleNode();
     }
 
-    private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
-    {
-        SnakeSegment createdSnakeSegment =
-            Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
-        GameManager.Instance.GameGrid.MarkTileAsOccupied(segmentPosition, createdSnakeSegment.gameObject);
-        return createdSnakeSegment;
-    }
-
-    public void AddBack()
+    public void AddBackSegment()
     {
         Vector2 newSegmentPosition = GetNewBackPosition();
 
@@ -102,7 +102,7 @@ public class SnakeController : IDataPersistence, IDisposable
         Snake.Remove(segmentNode);
     }
 
-    public void RemoveBack()
+    public void RemoveBackSegment()
     {
         SnakeSegment last = Snake.Last.Value;
         Snake.RemoveLast();
@@ -138,18 +138,18 @@ public class SnakeController : IDataPersistence, IDisposable
     public void LoadData(GameData loadedData)
     {
         DestroySnake();
-        CreateSnakeFromData(loadedData.SnakeSegmentPositions);
+        LoadSnake(loadedData.SnakeSegmentPositions);
     }
 
     private void DestroySnake()
     {
         while (Snake.Count > 0)
         {
-            RemoveBack();
+            RemoveBackSegment();
         }
     }
 
-    private void CreateSnakeFromData(List<Vector2> snakeData)
+    private void LoadSnake(List<Vector2> snakeData)
     {
         foreach (Vector2 snakeSegmentPosition in snakeData)
         {
