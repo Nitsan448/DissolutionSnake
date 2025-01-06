@@ -54,7 +54,6 @@ public class ItemSpawner : MonoBehaviour, IDataPersistence
 
     public void RemoveItem(Item item)
     {
-        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(item.transform.position);
         _items.Remove(item);
     }
 

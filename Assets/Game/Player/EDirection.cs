@@ -40,4 +40,9 @@ public static class EDirectionExtensions
 
         return EDirection.Up;
     }
+
+    public static EDirection GetOppositeDirection(this EDirection direction)
+    {
+        return (EDirection)(((int)direction + 2) % 4);
+    }
 }

@@ -20,7 +20,7 @@ public class Player : MonoBehaviour, IDataPersistence
     [SerializeField] private AudioSource _eatTailAudioSource;
     private float _lastMovementTime;
     private PlayerInputHandler _playerInputHandler;
-    private SnakeBuilder _snakeBuilder;
+    private SnakeController _snakeController;
     private SnakeSplitter _snakeSplitter;
 
     private void OnDestroy()
@@ -31,11 +31,11 @@ public class Player : MonoBehaviour, IDataPersistence
     private void Start()
     {
         _playerInputHandler = new PlayerInputHandler(_startingMovementDirection);
-        _snakeBuilder = new SnakeBuilder(_snakeSegmentPrefab, transform, _snakeStartingSize);
-        _snakeSplitter = new SnakeSplitter(_snakeBuilder, _snakeDissolutionStartingSpeed);
+        _snakeController = new SnakeController(_snakeSegmentPrefab, transform, _snakeStartingSize, _startingMovementDirection);
+        _snakeSplitter = new SnakeSplitter(_snakeController, _snakeDissolutionStartingSpeed);
         DataPersistenceManager.Instance.Register(this);
         transform.position = GameManager.Instance.GameGrid.GetClosestTile(transform.position);
-        _snakeBuilder.CreateNewSnake();
+        _snakeController.CreateNewSnake();
     }
 
     private void Update()
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour, IDataPersistence
         _playerInputHandler.DirectionChanged = false;
 
         Vector2 nextTilePosition =
-            GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
+            GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeController.HeadPosition, _playerInputHandler.MovementDirection);
         HandleCollisionsInNextTile(nextTilePosition);
         MoveToNextTile();
     }
@@ -63,12 +63,14 @@ public class Player : MonoBehaviour, IDataPersistence
     private void HandleCollisionsInNextTile(Vector2 nextTilePosition)
     {
         if (!GameManager.Instance.GameGrid.IsPositionOccupied(nextTilePosition)) return;
-
         GameObject hitObject = GameManager.Instance.GameGrid.GetGameObjectAtOccupiedTile(nextTilePosition);
 
-        //Found last minute bugs and had to do this null check :(
-        //Sometimes after loading a save file some of the items are marked as null in the grid
+        // Found some last minute bugs and had to do this null check :(
+        // Items in the grid are sometimes marked as null after saving and loading the game.
+        // This happens when the game is saved with items in the grid
+        // and then loaded while those items are still there.
         if (hitObject == null) return;
+
         HandleCollision(hitObject);
     }
 
@@ -93,7 +95,8 @@ public class Player : MonoBehaviour, IDataPersistence
         if (snakeSegment.IsDetached) return;
 
         //Search for hit segment starting from middle node and ending at the tail
-        LinkedListNode<SnakeSegment> current = _snakeBuilder.MiddleSegmentNode;
+
+        LinkedListNode<SnakeSegment> current = _snakeController.MiddleSegmentNode;
         while (current != null)
         {
             if (snakeSegment == current.Value)
@@ -105,6 +108,8 @@ public class Player : MonoBehaviour, IDataPersistence
 
             current = current.Next;
         }
+
+        Death();
     }
 
     private void Death()
@@ -118,17 +123,17 @@ public class Player : MonoBehaviour, IDataPersistence
         OnItemEaten?.Invoke(item.ItemScore);
         item.Remove();
         Destroy(item.gameObject);
-        _snakeBuilder.AddBack();
+        _snakeController.AddBack();
         _eatItemAudioSource.Play();
     }
 
     private void MoveToNextTile()
     {
-        _snakeBuilder.Snake.First.Value.MakeBody();
+        _snakeController.Snake.First.Value.MakeBody();
         Vector2 newFrontPosition =
-            GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeBuilder.HeadPosition, _playerInputHandler.MovementDirection);
-        _snakeBuilder.AddFront(newFrontPosition);
-        _snakeBuilder.RemoveBack();
+            GameManager.Instance.GameGrid.GetNextTileInDirection(_snakeController.HeadPosition, _playerInputHandler.MovementDirection);
+        _snakeController.AddFront(newFrontPosition);
+        _snakeController.RemoveBack();
     }
 
     public void SaveData(GameData dataToSave)

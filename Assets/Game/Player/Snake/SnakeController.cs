@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class SnakeBuilder : IDataPersistence, IDisposable
+public class SnakeController : IDataPersistence, IDisposable
 {
-    //TODO: refactor
-
     public LinkedList<SnakeSegment> Snake { get; private set; }
     public Vector2 HeadPosition => Snake.First.Value.transform.position;
 
     private SnakeSegment _snakeSegmentPrefab;
     private Transform _playerTransform;
     private int _snakeStartingSize;
+    private EDirection _startingDirection;
     public LinkedListNode<SnakeSegment> MiddleSegmentNode;
 
 
-    public SnakeBuilder(SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize)
+    public SnakeController(SnakeSegment snakeSegmentPrefab, Transform playerTransform, int snakeStartingSize, EDirection startingDirection)
     {
         _snakeSegmentPrefab = snakeSegmentPrefab;
         _playerTransform = playerTransform;
         _snakeStartingSize = snakeStartingSize;
+        _startingDirection = startingDirection;
         DataPersistenceManager.Instance.Register(this);
     }
 
@@ -47,16 +47,14 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         SnakeSegment snakeSegment = CreateSnakeSegment(frontPosition);
         Snake.AddFirst(snakeSegment);
         Snake.First.Value.MakeHead();
-        GameManager.Instance.GameGrid.MarkTileAsOccupied(frontPosition, snakeSegment.gameObject);
 
         UpdateMiddleNode(false);
     }
 
     private void UpdateMiddleNode(bool moveForward)
     {
-        //TODO: refactor
-        bool moveMiddleNode = moveForward ? Snake.Count % 2 == 0 : Snake.Count % 2 == 1;
-        if (!moveMiddleNode) return;
+        bool shouldMoveMiddleNode = moveForward ? Snake.Count % 2 == 0 : Snake.Count % 2 == 1;
+        if (!shouldMoveMiddleNode) return;
         if (MiddleSegmentNode == null)
         {
             SetNewMiddleNode();
@@ -70,7 +68,10 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
     private SnakeSegment CreateSnakeSegment(Vector2 segmentPosition)
     {
-        return Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
+        SnakeSegment createdSnakeSegment =
+            Object.Instantiate(_snakeSegmentPrefab, segmentPosition, Quaternion.identity, parent: _playerTransform);
+        GameManager.Instance.GameGrid.MarkTileAsOccupied(segmentPosition, createdSnakeSegment.gameObject);
+        return createdSnakeSegment;
     }
 
     public void AddBack()
@@ -79,7 +80,6 @@ public class SnakeBuilder : IDataPersistence, IDisposable
 
         SnakeSegment newSegment = CreateSnakeSegment(newSegmentPosition);
         Snake.AddLast(newSegment);
-        GameManager.Instance.GameGrid.MarkTileAsOccupied(newSegmentPosition, newSegment.gameObject);
 
         UpdateMiddleNode(true);
     }
@@ -90,7 +90,7 @@ public class SnakeBuilder : IDataPersistence, IDisposable
         LinkedListNode<SnakeSegment> secondToLastSegment = Snake.Last.Previous;
 
         EDirection direction = secondToLastSegment == null
-            ? EDirection.Down
+            ? _startingDirection.GetOppositeDirection()
             : EDirectionExtensions.GetDirectionFromVector(lastSegment.transform.position - secondToLastSegment.Value.transform.position);
 
         return GameManager.Instance.GameGrid.GetNextTileInDirection(lastSegment.transform.position, direction);

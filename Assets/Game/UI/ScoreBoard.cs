@@ -34,13 +34,6 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
 
     private void OnEnable()
     {
-        // SubscribeToItemEatenEventAfterOneFrame().Forget();
-        _player.OnItemEaten += UpdateScore;
-    }
-
-    private async UniTask SubscribeToItemEatenEventAfterOneFrame()
-    {
-        await UniTask.Yield();
         _player.OnItemEaten += UpdateScore;
     }
 

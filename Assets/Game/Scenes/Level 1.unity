@@ -227,11 +227,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6170077216800673461, guid: fc6e07a643ff5b34b912b4e1c163298b, type: 3}
   m_PrefabInstance: {fileID: 3976297714066896647}
   m_PrefabAsset: {fileID: 0}
---- !u!61 &238635884 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 5926909144782862252, guid: fc6e07a643ff5b34b912b4e1c163298b, type: 3}
-  m_PrefabInstance: {fileID: 3976297714066896647}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &238635885 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1794983763534795856, guid: fc6e07a643ff5b34b912b4e1c163298b, type: 3}
@@ -1968,11 +1963,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5612754867372397637, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.5
+      value: 8.44
       objectReference: {fileID: 0}
     - target: {fileID: 5612754867372397637, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.36
+      value: -7.02
       objectReference: {fileID: 0}
     - target: {fileID: 5612754867372397637, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2007,8 +2002,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758299393684688351, guid: 1cd88a227f3082b438374243b32d7db9, type: 3}
-      propertyPath: _timeBetweenMovements
-      value: 0.1
+      propertyPath: _snakeStartingSize
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2023,10 +2018,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1962916580}
     m_Modifications:
-    - target: {fileID: 1794983763534795856, guid: fc6e07a643ff5b34b912b4e1c163298b, type: 3}
-      propertyPath: _collider
-      value: 
-      objectReference: {fileID: 238635884}
     - target: {fileID: 3278546400138334404, guid: fc6e07a643ff5b34b912b4e1c163298b, type: 3}
       propertyPath: m_Name
       value: GameGrid
@@ -2087,14 +2078,6 @@ PrefabInstance:
     - target: {fileID: 795344028321617696, guid: dd45d6c9687fc80489486451094cc083, type: 3}
       propertyPath: m_Name
       value: ItemSpawner
-      objectReference: {fileID: 0}
-    - target: {fileID: 1772126996156299192, guid: dd45d6c9687fc80489486451094cc083, type: 3}
-      propertyPath: _maximumItems
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1772126996156299192, guid: dd45d6c9687fc80489486451094cc083, type: 3}
-      propertyPath: _timeBetweenSpawns
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8837268265371764264, guid: dd45d6c9687fc80489486451094cc083, type: 3}
       propertyPath: m_LocalPosition.x

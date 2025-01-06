@@ -15,5 +15,6 @@ public class Item : MonoBehaviour
     public void Remove()
     {
         _itemSpawner.RemoveItem(this);
+        GameManager.Instance.GameGrid.MarkTileAsUnOccupied(transform.position);
     }
 }

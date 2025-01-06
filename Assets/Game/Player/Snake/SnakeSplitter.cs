@@ -6,12 +6,12 @@ using Object = UnityEngine.Object;
 
 public class SnakeSplitter
 {
-    private SnakeBuilder _snakeBuilder;
+    private SnakeController _snakeController;
     private float _dissolutionStartingDelay;
 
-    public SnakeSplitter(SnakeBuilder snakeBuilder, float dissolutionStartingDelay)
+    public SnakeSplitter(SnakeController snakeController, float dissolutionStartingDelay)
     {
-        _snakeBuilder = snakeBuilder;
+        _snakeController = snakeController;
         _dissolutionStartingDelay = dissolutionStartingDelay;
     }
 
@@ -19,7 +19,7 @@ public class SnakeSplitter
     {
         LinkedList<SnakeSegment> detachedSection = DetachSection(nodeToStartSplitFrom);
         DissoluteDetachedSection(detachedSection).Forget();
-        _snakeBuilder.SetNewMiddleNode();
+        _snakeController.SetNewMiddleNode();
     }
 
     private LinkedList<SnakeSegment> DetachSection(LinkedListNode<SnakeSegment> nodeToStartDetachingFrom)
@@ -32,7 +32,7 @@ public class SnakeSplitter
             LinkedListNode<SnakeSegment> next = current.Next;
             detachedSection.AddLast(current.Value);
             current.Value.MakeDetachedNode();
-            _snakeBuilder.DetachSegment(current);
+            _snakeController.DetachSegment(current);
             current = next;
         }
 
