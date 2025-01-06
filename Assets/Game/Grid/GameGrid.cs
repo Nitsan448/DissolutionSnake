@@ -129,5 +129,11 @@ public class GameGrid : MonoBehaviour
             Vector2 lineEnd = new(rowXPosition, _collider.bounds.max.y);
             Gizmos.DrawLine(lineStart, lineEnd);
         }
+
+        Gizmos.color = Color.red;
+        foreach (Vector2 occupiedTilePosition in _occupiedTiles.Keys)
+        {
+            Gizmos.DrawCube(occupiedTilePosition, Vector2.one * _tileSize);
+        }
     }
 }
