@@ -7,6 +7,9 @@ public class ScoreBoard : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private TextMeshPro _text;
 
+    //The ScoreBoard class has a tight coupling with the Player class
+    //it will be better if someone like the gameManger kind will listen to the player and call public UpdateScore on the ScoreBoard
+    //or to use some kind of EventBus
     private Player _player;
     private int _currentScore;
 

@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//missing namespaces in project
 public class GameManager : ASingleton<GameManager>
 {
     [SerializeField] private Player _player;
