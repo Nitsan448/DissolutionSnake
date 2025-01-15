@@ -14,6 +14,7 @@ public class Item : MonoBehaviour
 
     public void Remove()
     {
+        //There is a circular dependency between Item and ItemSpawner. I believe Item shouldn't have knowledge of ItemSpawner.
         _itemSpawner.RemoveItem(this);
         GameManager.Instance.GameGrid.MarkTileAsUnOccupied(transform.position);
     }

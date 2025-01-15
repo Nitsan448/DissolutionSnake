@@ -42,6 +42,7 @@ public class Player : MonoBehaviour, IDataPersistence
         _playerInputHandler.HandleInput();
     }
 
+    //I'm not sure why you need code in FixedUpdate() and not Update()
     private void FixedUpdate()
     {
         if (GameManager.Instance.GameState != EGameState.Running) return;
